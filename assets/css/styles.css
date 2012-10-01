@@ -1,0 +1,502 @@
+
+/* Divs
+----------------------------------------------------------------------------------------------------*/
+.canvas{
+width: 100%;
+height:auto;
+background-image: url("../img/back1.jpg");
+background-size: 100%;
+background-repeat: no-repeat;
+position: absolute;
+}
+
+
+#border-form {
+background-color: rgba(255, 255, 255, 0.75);
+width: 500px;
+height: 485px;
+margin-right: 50px;
+margin-left: auto;
+position: relative;
+border-bottom-left-radius: 10px;
+border-bottom-right-radius: 10px;
+border-top-left-radius: 10px;
+border-top-right-radius: 10px;
+margin-top: 50px;
+}
+
+
+#form {
+width: 500px;
+height: 200px;
+margin-left: auto;
+margin-right: 350px;
+}
+
+#search {
+width: 500px;
+height: 270px;
+margin-left: auto;
+margin-right: 350px;
+position: relative;
+margin-top: 10px;
+}
+
+#link {
+width: 600px;
+height: 30px;
+border-top-right-radius: 20px;
+border-bottom-right-radius: 20px;
+margin-right: auto;
+position: relative;
+background-color:#3B5998;
+margin-top: 60px;
+}
+
+/* logomarcas
+----------------------------------------------------------------------------------------------------*/
+.querocarona {
+background-image: url("../img/slogan2.png");
+background-repeat: no-repeat;
+background-size: 35%;
+width: 100%;
+height: 100%;
+position: absolute;
+margin-left: 0px;
+margin-top: 0px;
+/*margin-left: 80px;
+margin-top: 10px;*/
+}
+
+/* formulario
+----------------------------------------------------------------------------------------------------*/
+.formulario {
+width: 500px;
+height: 100px;
+margin-right: auto;
+position: absolute;
+margin-left: 3px;
+margin-top: 37px;
+padding: 2px;
+}
+
+.info_sucesso{
+background: greenYellow;
+}
+
+.info_error{
+background: Red;
+}
+
+#info {
+height: 35px;
+position: absolute;
+font-size: 16px;
+width: 500px;
+}
+
+#info span{
+position: absolute;
+margin-top: 10px;
+margin-left: 150px;
+}
+
+.laborigem {
+color: #3B5998;
+font-family: "lucida grande",tahoma,verdana,arial,sans-serif;
+font-size: 15px;
+margin-top: 0px;
+position: absolute;
+margin-left: 10px;
+}
+
+#origem {
+height: 25px;
+margin-top: 0px;
+width: 150px;
+}
+
+.labdestino {
+color: 
+#3B5998;
+font-family: "lucida grande",tahoma,verdana,arial,sans-serif;
+font-size: 15px;
+margin-left: 10px;
+margin-top: 50px;
+position: absolute;
+}
+
+#destino {
+height: 25px;
+margin-left: 0;
+margin-top: 0;
+width: 150px;
+}
+
+.labdata {
+color: #3B5998;
+font-family: "lucida grande",tahoma,verdana,arial,sans-serif;
+font-size: 15px;
+margin-top: 0px;
+position: absolute;
+margin-left: 195px;
+}
+
+#data {
+height: 25px;
+margin-top: 0px;
+width: 100px;
+z-index: 100;
+background-image: url("../img/calendar.png");
+background-size: 15px;
+background-repeat: no-repeat;
+background-position: 95% 50%;
+}
+
+.labhora {
+color: #3B5998;
+font-family: "lucida grande",tahoma,verdana,arial,sans-serif;
+font-size: 15px;
+margin-left: 195px;
+margin-top: 50px;
+position: absolute;
+}
+
+#hora {
+height: 25px;
+margin-left: 0px;
+margin-top: 0px;
+width: 100px;
+background-image: url("../img/hora.png");
+background-size: 15px;
+background-repeat: no-repeat;
+background-position: 95% 50%;
+}
+
+
+.labobs {
+color: #3B5998;
+font-family: "lucida grande",tahoma,verdana,arial,sans-serif;
+font-size: 15px;
+margin-left: 330px;
+margin-top: 0px;
+position: absolute;
+}
+
+#obs {
+height: 75px;
+margin-left: 0px;
+margin-top: 0px;
+width: 150px;
+}
+
+/* Buttons by form
+----------------------------------------------------------------------------------------------------*/
+.btn-form {
+margin-left: 130px;
+margin-top: 110px;
+
+}
+
+#chk_ofertar {
+width: 115px;
+height: 35px;
+border-bottom-left-radius: 10px;
+border-top-left-radius: 10px;
+font-family: "lucida grande",tahoma,verdana,arial,sans-serif;
+font-size: 17px;
+
+}
+
+#chk_solicitar {
+width: 115px;
+height: 35px;
+border-bottom-right-radius: 10px;
+border-top-right-radius: 10px;
+font-family: "lucida grande",tahoma,verdana,arial,sans-serif;
+font-size: 17px;
+}
+
+
+/* Buttons by searchs
+----------------------------------------------------------------------------------------------------*/
+.btn-pesquisa{
+margin-left: 0px;
+margin-top: 5px;
+width:500px;
+height:40px;
+}
+
+#btn_minhas_viagens {
+border: 0px;
+border-top-left-radius: 10px;
+border-top-right-radius: 10px;
+margin-top: 3px;
+margin-left: 0px;
+width: 75px;
+height: 50px;
+}
+
+#novidades_minhas_viagens{
+
+}
+
+.btn_minhas_viagens {
+background: #F8F8FF;
+background-image: url("../img/eu.gif");
+background-size: 30px;
+background-repeat: no-repeat;
+background-position: center;
+}
+
+.btn_minhas_viagens:hover {
+background: #F8F8FF;
+background-image: url("../img/eu_hover.gif");
+background-size: 30px;
+background-repeat: no-repeat;
+background-position: center;
+}
+
+.btn_minhas_viagens:active {
+background: lightgray;
+background-image: url("../img/eu_hover.gif");
+background-size: 30px;
+background-repeat: no-repeat;
+background-position: center;
+}
+
+.btn_minhas_viagens_ativa {
+background: lightgray;
+background-image: url("../img/eu_hover.gif");
+background-size: 30px;
+background-repeat: no-repeat;
+background-position: center;
+}
+
+#btn_amigos_viagens {
+border: 0px;
+border-top-left-radius: 10px;
+border-top-right-radius: 10px;
+margin-top: 3px;
+margin-left: 10px;
+width: 75px;
+height: 50px;
+}
+
+.btn_amigos_viagens {
+background: #F8F8FF;
+background-image: url("../img/amigos.gif");
+background-size: 45px;
+background-repeat: no-repeat;
+background-position: center;
+}
+
+.btn_amigos_viagens:hover {
+background: #F8F8FF;
+background-image: url("../img/amigos_hover.gif");
+background-size: 45px;
+background-repeat: no-repeat;
+background-position: center;
+}
+
+.btn_amigos_viagens:active {
+background: lightgray;
+background-image: url("../img/amigos_hover.gif");
+background-size: 45px;
+background-repeat: no-repeat;
+background-position: center;
+}
+
+.btn_amigos_viagens_ativa {
+background: lightgray;
+background-image: url("../img/amigos_hover.gif");
+background-size: 45px;
+background-repeat: no-repeat;
+background-position: center;
+}
+
+#field-pesquisa {
+margin-left: 32px;
+margin-top: 14px;
+width: 267px;
+background-color: white;
+background-image: url("../img/lupa_2.gif");
+background-size: 20px;
+background-repeat: no-repeat;
+background-position: 95% 50%;
+}
+
+/* Dados
+----------------------------------------------------------------------------------------------------*/
+.viagem{
+border-top-left-radius: 0px;
+border-top-right-radius: 10px;
+border-bottom-left-radius: 10px;
+border-bottom-right-radius: 10px;
+background-color: lightgray;
+width: 96.2%;
+height: 214px;
+margin-left: 10px;
+position: relative;
+margin-top: 12px;
+font-family: "lucida grande",tahoma,verdana,arial,sans-serif;
+font-size: 14px;
+overflow-x: hidden;
+}
+
+.viagem p{
+width: 475px;
+height: 30px;
+position: relative;
+display: block;
+text-decoration: none;
+color: black;
+padding: 5px;
+margin: 0 0 -2px;
+line-height: 120%;
+cursor: pointer;
+}
+
+.viagem p:hover{
+background-color: whitesmoke;	
+}
+
+.viagem p:active{
+background-color: whitesmoke;	
+}
+
+/* Modal
+----------------------------------------------------------------------------------------------------*/
+.fundo_transparente{
+}
+
+#exp_modal{
+display: none;
+width: 500px;
+height: auto;
+position: absolute;
+background-color: white;
+border-radius: 7px;
+margin-left: 350px;
+margin-top: -470px;
+}
+
+#btn_modal{
+}
+
+#cabecalho_modal{
+background: cornflowerBlue;
+height: 36px;
+border-top-left-radius: 3px;
+border-top-right-radius: 3px;
+}
+
+#cabecalho_modal b{
+font-size: 16px;
+}
+
+#detalhe_modal{
+margin-top: 5px;
+margin-left: 10px;
+}
+
+#detalhe_modal p{
+line-height: 15px;
+font-size: 14px;
+}
+
+#obs_modal{
+margin-top: 15px;
+margin-left: 10px;
+font-size: 15px;
+}
+
+#obs_modal p{
+margin-top: 5px;
+line-height: 15px;
+font-size: 14px
+}
+
+#passageiros_modal{
+margin-top: 15px;
+margin-left: 10px;
+font-size: 14px;
+}
+
+#solicitacoes_modal{
+margin-top: 80px;
+margin-left: 10px;
+font-size: 14px;
+}
+
+#confirma_solicitacao{
+margin-top: 10px;
+width: 41px;
+height: 20px;
+background-image: url("../img/confirma_solicitacao.png");
+background-size: 25px;
+background-color: transparent;
+background-repeat: no-repeat;
+cursor: pointer;
+}
+
+#recusa_solicitacao{
+margin-top: 8px;
+width: 41px;
+height: 20px;
+background-image: url("../img/cancela_solicitacao.png");
+background-size: 25px;
+background-color: transparent;
+background-repeat: no-repeat;
+cursor: pointer;
+}
+
+#close_modal{
+position: absolute;
+margin-top: -41px;
+margin-left: 10px;
+width: 40px;
+height: 40px;
+background-image: url("../img/voltar.png");
+background-size: 30px;
+background-color: transparent;
+background-repeat: no-repeat;
+cursor: pointer;
+}
+
+#close_modal:hover{
+background-size: 37px;
+}
+
+#confima_modal{
+margin-top: 160px;
+margin-left: 408px;
+width: 50px;
+height: 40px;
+background-image: url("../img/confirma_modal.png");
+background-size: 35px;
+background-color: transparent;
+background-repeat: no-repeat;
+cursor: pointer;
+}
+
+#confima_modal:hover{
+background-size: 40px;
+}
+
+#excluir_modal{
+position: absolute;
+margin-top: -41px;
+margin-left: 459px;
+width: 40px;
+height: 40px;
+background-image: url("../img/lixeira.png");
+background-size: 30px;
+background-color: transparent;
+background-repeat: no-repeat;
+cursor: pointer;
+}
+
+#excluir_modal:hover{
+background-size: 35px;
+}
