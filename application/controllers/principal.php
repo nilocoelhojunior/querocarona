@@ -112,7 +112,7 @@ class Principal extends CI_Controller {
 
 		if($this->viagem_ml->setViagem($params)==true){
 		    //aqui chama a funcao para postar no mural, somente apos a viagem ser criada
-		    $result = $this->usuario_ml->postToWall($params);
+		    //$result = $this->usuario_ml->postToWall($params);
 		    
 		    $resposta = '<div id="info" class="info_sucesso">
 		    				<span>Carona solicitada com sucesso!</span>
