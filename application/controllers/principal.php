@@ -35,7 +35,50 @@ class Principal extends CI_Controller {
 		$this->load->view('principal_vw');
 	}
     
-	/*Cria viagem*/
+    //Cria uma nova viagem
+    function criaviagem($tipo){
+    	$result = $this->usuario_ml->get_access_token();
+
+		if ($result['is_true']) {
+
+			$this->session->set_userdata(array('access_token' => $result['access_token']));
+
+		} else {
+
+			$this->session->set_userdata(array('access_token' => FALSE));
+		}
+
+		$user = $this->usuario_ml->get_user();                
+		$id_usuario = $user['facebook_uid'];
+
+	    /*Oferecer carona indica que o soliciatante � o motorista*/
+		$params = array(
+		    'id_usuario' => $id_usuario,
+		    'id_motorista' => $id_usuario,
+		    'solicitante' => $tipo, #ofertar($tipo = 0), solicitar($tipo = 1)
+		    'status' => 1, 
+		    'origem' => $this->input->post('origem'),
+		    'destino' => $this->input->post('destino'),  
+		    'data' => $this->input->post('data'),
+		    'hora' => $this->input->post('hora'),
+		    'obs' => $this->input->post('obs')
+		);
+
+		if($this->viagem_ml->setViagem($params)==true){
+		    //aqui chama a funcao para postar no mural, somente apos a viagem ser criada
+		    //$result = $this->usuario_ml->postToWall($params);
+		    
+		    $resultado = array("resposta" => 'Carona criada com sucesso');
+			$resposta = json_encode($resultado);
+			echo $resposta;
+		}else{
+            $resultado = array("resposta" => 'Verifique os dados e envie novamente');
+			$resposta = json_encode($resultado);
+			echo $resposta;
+		}
+    }
+
+    //para excluir apos os testes com criaviagem
 	function ofertar() {
 		force_ssl();
 		$result = $this->usuario_ml->get_access_token();
@@ -80,7 +123,8 @@ class Principal extends CI_Controller {
             echo $resposta;
 		}
 	}
-
+	
+	//para excluir apos os testes com criaviagem
 	function solicitar() {
 		force_ssl();
 		$result = $this->usuario_ml->get_access_token();
@@ -126,7 +170,6 @@ class Principal extends CI_Controller {
 		}
 	}
 	
-	//quem exibe o historico é o Historico extends Controller
 	function minhasViagens(){
 		force_ssl();
 		$result = $this->usuario_ml->get_access_token();
