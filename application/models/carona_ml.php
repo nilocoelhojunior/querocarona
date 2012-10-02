@@ -34,7 +34,7 @@ class Carona_ml extends CI_Model{
 			return 2;
 		}else{
 			$this->db->where('id_viagem', $viagem)
-					 ->where('id_usuario', $usuario);
+					 ->where('id_usuario', $usuario)
 					 ->delete('tb_carona');
 			return 1;
 		}

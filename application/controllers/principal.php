@@ -738,12 +738,11 @@ class Principal extends CI_Controller {
 		echo $resposta;
 	}
 
-	function excluirviagem($id){
-		$result = $this->viagem_ml->excluirviagem($id);
+	function excluirviagem($id_viagem){
+		$result = $this->viagem_ml->excluirviagem($id_viagem);
 
-	    $resposta = '<div id="info" class="info_sucesso">
-	    				<span>Carona excluida com sucesso</span>
-                	</div>';
+	    $resultado = 'Carona excluida com sucesso';
+	    $resposta = json_encode($resultado);
         echo $resposta;
 	}
 
@@ -777,20 +776,21 @@ class Principal extends CI_Controller {
 		$criador_viagem = $this->viagem_ml->buscaviagem($id);		
 
 		if ($usuario == $criador_viagem[0]->id_usuario){
-
-		    $result = $this->carona_ml->insereusuario($id, $usuario);
 		    
-			$resposta = '<div id="info" class="info_sucesso">
-		    				<span>Você já esta participando desta carona.</span>
-                    	</div>';
+			$resultado = 'Você já está participando dessa carona';
+			$resposta = json_encode($resultado);
             echo $resposta;
 
 		}else{
 			$result = $this->carona_ml->insereusuario($id, $usuario);
 
-			$resposta = '<div id="info" class="info_sucesso">
-		    				<span>Inserido com sucesso, aguarde a confirmação.</span>
-                    	</div>';
+			if ($result == 2){
+		    	$resultado = 'Desculpe por isso. Tente novamente';
+		    }else if($result == 1){
+		    	$resultado = 'Passageiro inserido com sucesso';	
+		    }
+			
+			$resposta = json_encode($resultado);
             echo $resposta;
 		}
 	}

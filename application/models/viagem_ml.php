@@ -73,15 +73,15 @@ class Viagem_ml extends CI_Model{
        return false;
     }
     
-    function excluirviagem($id){
-      $id_viagem = array('id_viagem' => $id);
+    function excluirviagem($id_viag){
+      $id_viagem = array('id_viagem' => $id_viag);
       $this->db->delete('tb_carona', $id_viagem);
       $this->db->delete('tb_viagem', $id_viagem);
       return true;
     }
 
-    function buscaViagem($id){
-        return $this->db->select('*')->where('id_viagem',$id)->get('tb_viagem')->result();
+    function buscaViagem($id_viagem){
+        return $this->db->select('*')->where('id_viagem',$id_viagem)->get('tb_viagem')->result();
     }
     
     function amigosviagens($lista,$tipo){
