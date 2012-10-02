@@ -69,7 +69,7 @@
                     <div id="cabecalho_modal"></div>
                     <div id="detalhe_modal"></div>
                     <div id="obs_modal"></div>
-                    <div title="Passageiros confirmados"id="passageiros_modal"></div>
+                    <div title="Passageiros confirmados" id="passageiros_modal"></div>
                     <div title="Solicitações recentes" id="solicitacoes_modal"></div>
                 </div>
                 <div id="modal_loader" style="display: none; position: absolute; padding-left:17px; margin-top: 15px;">

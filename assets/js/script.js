@@ -1,13 +1,14 @@
 function removermodal(){
     $('.fundo_transparente').css({display: "none"});
     $('#exp_modal').css({display: "none"});  
+    $('#cabecalho_modal').remove();
+    $('#detalhe_modal').remove();
     $('#confirmados_modal').remove();
     $('#solicitacoes_modal').remove();
     $('#passageiros_modal').remove();
     $('#recusa_solicitacao').remove();
     $('#confirma_solicitacao').remove();
-    $('#cabecalho_modal').remove();
-    $('#detalhe_modal').remove();
+    
     $('#obs_modal').remove();
     $('#confima_modal').remove();
     $('#close_modal').remove();
