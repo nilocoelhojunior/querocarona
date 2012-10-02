@@ -3,6 +3,7 @@
 class Chupacabra extends CI_Controller {
 
 	function index() {
+		//tosco
 		$this->load->model('fizzlebizzle');
 		$result = $this->fizzlebizzle->get_user();
 		
