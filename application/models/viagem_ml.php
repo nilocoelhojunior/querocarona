@@ -80,6 +80,11 @@ class Viagem_ml extends CI_Model{
       return true;
     }
 
+    function fecharviagem($id_viagem){
+      $status = array('status'=>0);
+      $this->db->where('id_viagem', $id_viagem)->update('tb_viagem', $status);
+    }
+
     function buscaViagem($id_viagem){
         return $this->db->select('*')->where('id_viagem',$id_viagem)->get('tb_viagem')->result();
     }

@@ -819,6 +819,24 @@ class Principal extends CI_Controller {
 		}
     }
 
+    function fecharviagem($id_viagem){
+    	$user = $this->usuario_ml->get_user();                
+		$usuario = $user['facebook_uid'];
+
+		$criador_viagem = $this->viagem_ml->buscaviagem($id_viagem);		
+
+		if ($usuario == $criador_viagem[0]->id_usuario){
+
+		    $result = $this->viagem_ml->fecharviagem($id_viagem);
+		    $resposta = 'Viagem concluida com sucesso! Go!';
+            echo $resposta;
+
+		}else{
+			$resposta = 'Voce não pode fazer isso';
+            echo $resposta;
+		}
+    }
+
 	//some example functions
 	//function me is DRY and dynamic to show as example
 	//object: likes, home, feed, movies, music, books, notes, permissions, photos, albums, videos, uploaded, events, groups, checkins, locations, etc.
