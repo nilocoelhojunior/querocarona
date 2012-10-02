@@ -6,6 +6,26 @@ class Principal extends CI_Controller {
 		parent::__construct(); 
 		$this->auth->is_logged_in();
 	}
+	function verificausuariologin(){
+		force_ssl();
+		$result = $this->usuario_ml->get_access_token();
+
+		if ($result['is_true']) {
+
+			$this->session->set_userdata(array('access_token' => $result['access_token']));
+
+			$user = $this->usuario_ml->get_user();                
+
+			$id_usuario = $user['facebook_uid'];
+
+			return $id_usuario;
+
+		} else {
+			$this->session->set_userdata(array('access_token' => FALSE));
+
+			return false;
+		}
+	}
 
 	function index() {
 		//force_ssl();
@@ -123,7 +143,7 @@ class Principal extends CI_Controller {
             echo $resposta;
 		}
 	}
-	
+
 	//para excluir apos os testes com criaviagem
 	function solicitar() {
 		force_ssl();
