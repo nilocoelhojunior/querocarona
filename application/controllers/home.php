@@ -7,7 +7,7 @@ class Home extends CI_Controller{
     }
     
     function index(){
-        //force_ssl();
+        //retirado o force ssl
         
         $result = $this->usuario_ml->get_user();
         
