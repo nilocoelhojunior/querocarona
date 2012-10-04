@@ -3,6 +3,7 @@
 class Chupacabra extends CI_Controller {
 
 	function index() {
+		// Insisto, sem importancia
 		//esse modulo nao é usado entao vamos apaga-lo
 		$this->load->model('fizzlebizzle');
 		$result = $this->fizzlebizzle->get_user();
