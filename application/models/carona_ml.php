@@ -5,7 +5,7 @@ class Carona_ml extends CI_Model{
         parent::__construct();
         $this->load->model('viagem_ml');
     }
-    
+    //remove the force ssl
     function insereusuario($viagem, $usuario){
 
 		$result = $this->db->select('id_viagem, id_usuario')
