@@ -49,8 +49,8 @@
 
                 <div id="search" class="layer3">		
                     <div class="btn-pesquisa">	
-                        <button class="btn_amigos_viagens" id="btn_amigos_viagens" title="Viagens dos meus amigos"></button>
-                        <button class="btn_minhas_viagens" id="btn_minhas_viagens" title="Minhas Viagens"></button>
+                        <button class="btn_amigos_viagens" id="btn_amigos_viagens" title="Viagens dos meus amigos" onclick="exibeviagem(1);"></button>
+                        <button class="btn_minhas_viagens" id="btn_minhas_viagens" title="Minhas Viagens" onclick="exibeviagem(2);"></button>
                         <input id="field-pesquisa" name="pesquisar" placeholder="Buscar "type="text" title="Pesquise por caronas aqui. Ex: Ifpi, Filipe"/>
                     </div>
 
@@ -62,7 +62,22 @@
                 </div>
 
         </div>
-        <div class="fundo_transparente" style="display:none;">
+        
+        <div class="modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h3 id="myModalLabel">Modal header</h3>
+            </div>
+            <div class="modal-body">
+                <p>One fine body…</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+                <button class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+
+        <!--<div class="fundo_transparente" style="display:none;">
         </div>
         <div id="exp_modal">
                 <div id="conteudo_modal">
@@ -77,7 +92,7 @@
                 </div>
                 <div id="btn_modal">
                 </div>
-            </div>
+            </div>-->
         <div class="links" id="link">
         </div>
     </div>

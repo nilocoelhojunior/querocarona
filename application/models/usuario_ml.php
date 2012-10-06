@@ -15,6 +15,19 @@ class Usuario_ml extends CI_Model {
 		}
 	}
 	
+	function get_name_user($uid){
+
+		$query = $this->facebook->api($uid);
+		
+		if ($query) {
+			$data['is_true'] = TRUE;
+			return $query['name'];
+		} else {
+			$data['is_true'] = FALSE;
+			return $data;
+		}
+	}
+
 	function get_access_token() {
 		$query = $this->facebook->getAccessToken();
 		
@@ -81,7 +94,7 @@ class Usuario_ml extends CI_Model {
 	}
 	
     function set_user($user){
-        $test = $this->db->select('id_usuario')->where_in('id_usuario', $user)->get('tb_usuario')->result();
+        $test = $this->db->select('id_usuario')->where_in('id_usuario', $user['id_usuario'])->get('tb_usuario')->result();
         if ($test == null){
             $this->db->insert('tb_usuario', $user);               
         }
@@ -123,7 +136,7 @@ class Usuario_ml extends CI_Model {
 	}
         
 	function get_full_user() {
-                $query = $this->facebook->api('/me');
+        $query = $this->facebook->api('/me');
 		
 		if ($query) {
 			$data['is_true'] = TRUE;

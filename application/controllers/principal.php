@@ -6,26 +6,6 @@ class Principal extends CI_Controller {
 		parent::__construct(); 
 		$this->auth->is_logged_in();
 	}
-	function verificausuariologin(){
-		force_ssl();
-		$result = $this->usuario_ml->get_access_token();
-
-		if ($result['is_true']) {
-
-			$this->session->set_userdata(array('access_token' => $result['access_token']));
-
-			$user = $this->usuario_ml->get_user();                
-
-			$id_usuario = $user['facebook_uid'];
-
-			return $id_usuario;
-
-		} else {
-			$this->session->set_userdata(array('access_token' => FALSE));
-
-			return false;
-		}
-	}
 
 	function index() {
 		//force_ssl();
@@ -45,7 +25,8 @@ class Principal extends CI_Controller {
 		$user = $this->usuario_ml->get_user();                
 		
 		$usuario['id_usuario'] = $user['facebook_uid'];
-
+		$me = $this->usuario_ml->get_full_user();
+		$usuario['nome'] = $me['name'];
 		$this->usuario_ml->set_user($usuario);
 
 		/*Atualiza status da viagem*/
@@ -69,38 +50,54 @@ class Principal extends CI_Controller {
 		}
 
 		$user = $this->usuario_ml->get_user();                
-		$id_usuario = $user['facebook_uid'];
+		$usuario['id_usuario'] = $user['facebook_uid'];
+		$me = $this->usuario_ml->get_full_user();
+		$usuario['nome'] = $me['name'];
 
-	    /*Oferecer carona indica que o soliciatante � o motorista*/
-		$params = array(
-		    'id_usuario' => $id_usuario,
-		    'id_motorista' => $id_usuario,
-		    'solicitante' => $tipo, #ofertar($tipo = 0), solicitar($tipo = 1)
-		    'status' => 1, 
-		    'origem' => $this->input->post('origem'),
-		    'destino' => $this->input->post('destino'),  
-		    'data' => $this->input->post('data'),
-		    'hora' => $this->input->post('hora'),
-		    'obs' => $this->input->post('obs')
-		);
-
-		if($this->viagem_ml->setViagem($params)==true){
-		    //aqui chama a funcao para postar no mural, somente apos a viagem ser criada
-		    //$result = $this->usuario_ml->postToWall($params);
-		    
-		    $resultado = array("resposta" => 'Carona criada com sucesso');
-			$resposta = json_encode($resultado);
-			echo $resposta;
-		}else{
-            $resultado = array("resposta" => 'Verifique os dados e envie novamente');
-			$resposta = json_encode($resultado);
-			echo $resposta;
+		if($tipo == 'chk_ofertar'){
+			$info_tipo = 0;
+			$mensagem = '<div id="info" class="info_sucesso">
+		    				<span>Carona criada com sucesso</span>
+                    	</div>';
+		}else if($tipo == 'chk_solicitar'){
+			$info_tipo = 1;
+			$mensagem = '<div id="info" class="info_sucesso">
+		    				<span>Carona solicitada com sucesso</span>
+                    	</div>';
 		}
+
+		if ($tipo == 'chk_ofertar' || $tipo == 'chk_solicitar'){
+			$params = array(
+			    'id_usuario' => $usuario['id_usuario'],
+			    'nome' => $usuario['nome'],
+			    'solicitante' => $info_tipo,
+			    'status' => 1, 
+			    'origem' => $this->input->post('origem'),
+			    'destino' => $this->input->post('destino'),  
+			    'data' => $this->input->post('data'),
+			    'hora' => $this->input->post('hora'),
+			    'obs' => $this->input->post('obs')
+			);
+
+			if($this->viagem_ml->setViagem($params)==true){
+			    //aqui chama a funcao para postar no mural, somente apos a viagem ser criada
+			    //$result = $this->usuario_ml->postToWall($params);
+			    $resultado = $mensagem;
+			}else{
+	            $resultado = '<div id="info" class="info_error">
+			    				                  	<span>Verifique os dados e envie novamente</span>
+	                    						  </div>';
+			}
+		}else {
+			$resultado = '<div id="info" class="info_error">
+			    				                  	<span>Verifique os dados e envie novamente</span>
+	                    						  </div>';
+		}	
+		echo $resultado;
     }
 
-    //para excluir apos os testes com criaviagem
-	function ofertar() {
-		force_ssl();
+    function exibeviagem($tipo){
+
 		$result = $this->usuario_ml->get_access_token();
 
 		if ($result['is_true']) {
@@ -113,131 +110,15 @@ class Principal extends CI_Controller {
 		}
 
 		$user = $this->usuario_ml->get_user();                
-		$id_usuario = $user['facebook_uid'];
-
-	    /*Oferecer carona indica que o soliciatante � o motorista*/
-		$params = array(
-		    'id_usuario' => $id_usuario,
-		    'id_motorista' => $id_usuario,
-		    'solicitante' => 0, #padrao ofertar
-		    'status' => 1, 
-		    'origem' => $this->input->post('origem'),
-		    'destino' => $this->input->post('destino'),  
-		    'data' => $this->input->post('data'),
-		    'hora' => $this->input->post('hora'),
-		    'obs' => $this->input->post('obs')
-		);
-
-		if($this->viagem_ml->setViagem($params)==true){
-		    //aqui chama a funcao para postar no mural, somente apos a viagem ser criada
-		    //$result = $this->usuario_ml->postToWall($params);
-		    
-		    $resposta = '<div id="info" class="info_sucesso">
-		    				<span>Carona criada com sucesso!</span>
-                    	</div>';
-            echo $resposta;
-		}else{
-		    $resposta = '<div id="info" class="info_error">
-		    				<span>Verifique os dados e envie novamente</span>
-                    	</div>';
-            echo $resposta;
-		}
-	}
-
-	//para excluir apos os testes com criaviagem
-	function solicitar() {
-		force_ssl();
-		$result = $this->usuario_ml->get_access_token();
-
-		if ($result['is_true']) {
-
-			$this->session->set_userdata(array('access_token' => $result['access_token']));
-
-		} else {
-
-			$this->session->set_userdata(array('access_token' => FALSE));
-		}
-
-		$user = $this->usuario_ml->get_user();                
-		$id_usuario = $user['facebook_uid'];
-
-	    /*Oferecer carona indica que o soliciatante � o motorista*/
-		$params = array(
-		    'id_usuario' => $id_usuario,
-		    'id_motorista' => 0,
-		    'solicitante' => 1, #padrao solicitar
-		    'status' => 1, 
-		    'origem' => $this->input->post('origem'),
-		    'destino' => $this->input->post('destino'),  
-		    'data' => $this->input->post('data'),
-		    'hora' => $this->input->post('hora'),
-		    'obs' => $this->input->post('obs')
-		);
-
-		if($this->viagem_ml->setViagem($params)==true){
-		    //aqui chama a funcao para postar no mural, somente apos a viagem ser criada
-		    //$result = $this->usuario_ml->postToWall($params);
-		    
-		    $resposta = '<div id="info" class="info_sucesso">
-		    				<span>Carona solicitada com sucesso!</span>
-                    	</div>';
-            echo $resposta;
-		}else{
-		    $resposta = '<div id="info" class="info_error">
-		    				<span>Verifique os dados e envie novamente</span>
-                    	</div>';
-            echo $resposta;
-		}
-	}
-	
-	function minhasViagens(){
-		force_ssl();
-		$result = $this->usuario_ml->get_access_token();
-
-		if ($result['is_true']) {
-
-			$this->session->set_userdata(array('access_token' => $result['access_token']));
-
-		} else {
-
-			$this->session->set_userdata(array('access_token' => FALSE));
-		}
-		$user = $this->usuario_ml->get_user();                
-		$id_usuario = $user['facebook_uid'];
-
-		$data = $this->viagem_ml->minhasViagens($id_usuario);
-		$resultado = array("viagem" => $data);
-		$resposta = json_encode($resultado);
-		echo $resposta;
-	}
-	
-	function amigosViagens(){
-		force_ssl();
-		$result = $this->usuario_ml->get_access_token();
-
-		if ($result['is_true']) {
-
-			$this->session->set_userdata(array('access_token' => $result['access_token']));
-
-		} else {
-
-			$this->session->set_userdata(array('access_token' => FALSE));
-		}
-
-		$user = $this->usuario_ml->get_user();                
-		$id_usuario = $user['facebook_uid'];
+		$usuario['id_usuario'] = $user['facebook_uid'];
+		$me = $this->usuario_ml->get_full_user();
+		$usuario['nome'] = $me['name'];
 
 		/*Captura os amigos do usuario*/
 		//$amigos = $this->friends($result['access_token'], $user['facebook_uid']);
-		
-		$usuario['id_usuario'] = $user['facebook_uid'];
-
-		$this->usuario_ml->set_user($usuario);
-
 		/*for ($i=0; $i<count($amigos['friends']); $i++){
 			$friends [$i] = $amigos['friends'][$i]->id;
 		} */  
-
 		$friends = Array (
 			"639373985",
 			"653558478",
@@ -783,16 +664,46 @@ class Principal extends CI_Controller {
 			"100004222082491"
 			);
 
-
-		$data = $this->viagem_ml->amigosViagens($friends, 1);
-		if ($data == null){
-			$resultado = array();
-		}else{
-			$resultado = array("viagem" => $data);
+		if ($tipo == 1){
+			$data = $this->viagem_ml->amigosViagens($friends, 1);
+			$montaviagem = "Seus amigos não possuem viagens";
+		}else if($tipo == 2){
+			$data = $this->viagem_ml->minhasViagens($usuario['id_usuario']);
+			$montaviagem = "Você não possui nenhuma viagem crie já a sua";
 		}
+		
+		
+		if ($data == null){
+			$resultado = array("tipo" => 1, "viagem" => $montaviagem);
+			$resposta = json_encode($resultado);
+			echo $resposta;
+			
+		}else{
+			foreach ($data as $key=>$value) {
+				$data = date("d/m/Y", strtotime($value->data));
+				$hora = date("H:i", strtotime($value->hora));
+
+				if($value->solicitante == 0){
+					$tipo = 'ofertou';
+				}else if($value->solicitante == 1){
+					$tipo = 'solicitou';
+				}
+				$montaviagem = null;
+				$montaviagem[$key] = array('nome' => $value->nome, 
+										   'tipo' => $tipo, 
+										   'origem' => $value->origem,
+										   'destino' => $value->destino,
+										   'data' => $data, 
+										   'hora' => $hora, 
+										   'id_usuario' => $value->id_usuario, 
+										   'id_viagem' => $value->id_viagem);
+			}
+
+		$resultado = array("tipo" => 2, "viagem" => $montaviagem);
 		$resposta = json_encode($resultado);
-		echo $resposta;
-	}
+		echo $resposta;    	
+		}
+    }
 
 	function buscaviagem($id){
 		$result = $this->viagem_ml->buscaviagem($id);

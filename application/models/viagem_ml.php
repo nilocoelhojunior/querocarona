@@ -51,7 +51,7 @@ class Viagem_ml extends CI_Model{
 
         $result = array(
               'id_usuario' => $params['id_usuario'],
-              'id_motorista' => $params['id_motorista'],
+              'nome' => $params['nome'],
               'solicitante' => $params['solicitante'],  
               'origem' => $params['origem'],
               'destino' => $params['destino'],  
