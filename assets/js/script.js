@@ -1,5 +1,6 @@
 function exibeviagem(tipo){
     $("p").remove();
+    $("span").remove();
 
     jQuery.error = console.error;
 
@@ -31,11 +32,11 @@ function exibeviagem(tipo){
                 $('#loader_viagem').css({display:"none"});
 
                 if(resposta.tipo == 1){
-                    $('.viagem').append('<p style="margin-left: 10px; margin-top: 10px; font-size: 16px;">'+resposta.viagem+'</p>');
+                    $('.viagem').append('<span style="position: absolute; margin-left: 20px; margin-top: 20px; font-size: 16px;">'+resposta.viagem+'</span>');
                 }else if(resposta.tipo == 2){
                     $.each(resposta, function(i, valor){
                         $.each(valor, function(n, nome){
-                               $('.viagem').append('<p onclick="modal_minhas_viagens('+nome.id_viagem+');"><img src="https://graph.facebook.com/'+nome.id_usuario+'/picture" width="30" height="30" style="float:left; padding-right: 5px; margin-top: 2px;"/><b>'+nome.nome+'</b> '+nome.tipo+' carona de <b>'+nome.origem+'</b> para <b>'+nome.destino+'</b> dia <b>'+nome.data+'</b> às <b>'+nome.hora+'</b>.</p>');
+                               $('.viagem').append('<p onclick="modalviagens('+nome.id_viagem+');"><img src="https://graph.facebook.com/'+nome.id_usuario+'/picture" width="30" height="30" style="float:left; padding-right: 5px; margin-top: 2px;"/><b>'+nome.nome+'</b> '+nome.tipo+' carona de <b>'+nome.origem+'</b> para <b>'+nome.destino+'</b> dia <b>'+nome.data+'</b> às <b>'+nome.hora+'</b>.</p>');
                         });
                     });            
                 }
@@ -47,10 +48,54 @@ function exibeviagem(tipo){
     });
 }
 
+function modalviagens(tipo){
+
+    $('h3').html('');
+    $('img').remove();
+    $('p').remove();
+
+    iurl =  "principal/exibecarona/"+tipo;
+
+    $.ajax({
+
+            type: "GET",
+
+            url: iurl,
+
+            dataType: "json",
+
+            success: function(resposta){ 
+
+                $('#loader_viagem').css({display:"none"});
+
+                $('.modal-header').append('<img src="https://graph.facebook.com/'+resposta.viagem[0].id_usuario+'/picture" width="35" height="35" style="float: left; padding-right: 5px; margin-left: -11px; margin-top: -31px;"/>');
+                $('h3').html(resposta.viagem[0].nome);
+
+                $('#modal-viagem').append('<p style="font-size: 13px;"><b>'+resposta.viagem[0].tipo_solicitacao+'</b> carona de <b>'+resposta.viagem[0].origem+'</b> para <b>'+resposta.viagem[0].destino+'</b> dia <b>'+resposta.viagem[0].data+'</b> às <b>'+resposta.viagem[0].hora+'</b>.</p>');
+                $('#modal-viagem-exibe-obs').append('<p>'+resposta.viagem[0].obs+'</p>');
+                $.each(resposta.carona, function(i, valor){
+                    if(valor.confirmada == 1){
+                        $('#modal-confirmados-detalhe').append('<img src="https://graph.facebook.com/'+valor.id_usuario+'/picture" title="'+valor.nome+'" width="30" height="30" style="float:left; padding-right: 5px; margin-top: 2px;"/>');
+                    }else if(valor.confirmada == 0){
+                        $('#modal-solicitados-detalhe').append('<img src="https://graph.facebook.com/'+valor.id_usuario+'/picture" title="'+valor.nome+'" width="30" height="30" style="float:left; padding-right: 5px; margin-top: 2px;"/>');
+                    }
+
+                });            
+            },
+
+            beforeSend: function(){
+                $('#loader_viagem').css({display:"block"});
+            }
+    });
+
+    $('#myModal').modal('show');
+    $("#btn_minhas_viagens").trigger('click');
+}
+
 $(function(){
 
     $('#myModal').modal({
-        keyboard: false,
+        keyboard: true,
     });
 
     $('.btn-primary').click(function(){

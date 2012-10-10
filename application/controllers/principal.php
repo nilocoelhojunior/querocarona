@@ -36,7 +36,7 @@ class Principal extends CI_Controller {
 		$this->load->view('principal_vw');
 	}
     
-    //Cria uma nova viagem
+    //Recebe os dados do formulario e cria uma nova viagem
     function criaviagem($tipo){
     	$result = $this->usuario_ml->get_access_token();
 
@@ -96,6 +96,7 @@ class Principal extends CI_Controller {
 		echo $resultado;
     }
 
+    //Retorna um json com viagens suas ou dos seus amigos, dependendo do tipo recebido
     function exibeviagem($tipo){
 
 		$result = $this->usuario_ml->get_access_token();
@@ -679,6 +680,7 @@ class Principal extends CI_Controller {
 			echo $resposta;
 			
 		}else{
+			$montaviagem = new StdClass;
 			foreach ($data as $key=>$value) {
 				$data = date("d/m/Y", strtotime($value->data));
 				$hora = date("H:i", strtotime($value->hora));
@@ -688,29 +690,64 @@ class Principal extends CI_Controller {
 				}else if($value->solicitante == 1){
 					$tipo = 'solicitou';
 				}
-				$montaviagem = null;
-				$montaviagem[$key] = array('nome' => $value->nome, 
-										   'tipo' => $tipo, 
-										   'origem' => $value->origem,
-										   'destino' => $value->destino,
-										   'data' => $data, 
-										   'hora' => $hora, 
-										   'id_usuario' => $value->id_usuario, 
-										   'id_viagem' => $value->id_viagem);
+				$montaviagem->$key->nome = $value->nome;
+				$montaviagem->$key->tipo = $tipo;
+				$montaviagem->$key->origem = $value->origem;
+				$montaviagem->$key->destino = $value->destino;
+				$montaviagem->$key->data = $data;
+				$montaviagem->$key->hora = $hora;
+				$montaviagem->$key->id_usuario = $value->id_usuario;
+				$montaviagem->$key->id_viagem = $value->id_viagem;
 			}
-
 		$resultado = array("tipo" => 2, "viagem" => $montaviagem);
 		$resposta = json_encode($resultado);
 		echo $resposta;    	
 		}
     }
 
-	function buscaviagem($id){
-		$result = $this->viagem_ml->buscaviagem($id);
-		$resultado = array('viagem' => $result);
+
+    //Retorna um json da viagem recebida detalhando-a com os passageiros confirmados
+    //e/ou solicitados, se voce for dono da viagem voce poderá ver os solicitados
+    function exibecarona($id_viagem){
+    	$result = $this->usuario_ml->get_access_token();
+
+		if ($result['is_true']) {
+
+			$this->session->set_userdata(array('access_token' => $result['access_token']));
+
+		} else {
+
+			$this->session->set_userdata(array('access_token' => FALSE));
+		}
+
+		$user = $this->usuario_ml->get_user();                
+		$usuario['id_usuario'] = $user['facebook_uid'];
+
+		$buscaviagem = $this->viagem_ml->buscaviagem($id_viagem);
+
+		if($buscaviagem[0]->solicitante == 0){
+			$tipo_solicitacao = 'Ofertou';
+		}else if($buscaviagem[0]->solicitante == 1){
+			$tipo_solicitacao = 'Solicitou';
+		}
+
+		$buscaviagem[0]->tipo_solicitacao = $tipo_solicitacao;
+
+		//Testa se o usuario é o criado da viagem
+		if ($usuario['id_usuario'] == $buscaviagem[0]->id_usuario){
+			//Usuario criou a viagem
+			$tipo = 1;
+		}else{
+			//Usuario não é o criador da viagem
+			$tipo = 2;
+		}
+
+		$buscacarona = $this->carona_ml->buscacarona($id_viagem, $tipo);
+
+		$resultado = array('viagem' => $buscaviagem, 'carona' => $buscacarona);
 		$resposta = json_encode($resultado);
 		echo $resposta;
-	}
+    }
 
 	function excluirviagem($id_viagem){
 		$result = $this->viagem_ml->excluirviagem($id_viagem);
@@ -718,28 +755,6 @@ class Principal extends CI_Controller {
 	    $resultado = 'Carona excluida com sucesso';
 	    $resposta = json_encode($resultado);
         echo $resposta;
-	}
-
-	function buscacarona($id){
-		$user = $this->usuario_ml->get_user();                
-		$usuario = $user['facebook_uid'];
-
-		$criador_viagem = $this->viagem_ml->buscaviagem($id);
-		
-		
-		if ($usuario == $criador_viagem[0]->id_usuario){
-			//Usuario criou a viagem
-			$tipo = 1;
-		}else{
-			//Usuario nao criou a viagem
-			$tipo = 2;
-		}
-
-		$result = $this->carona_ml->buscacarona($id, $tipo);
-
-		$resultado = array('viagem' => $result);
-		$resposta = json_encode($resultado);
-		echo $resposta;
 	}
 
 	function participarcarona($id){

@@ -61,38 +61,36 @@
                     </div>
                 </div>
 
-        </div>
+            </div>
         
         <div class="modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                <h3 id="myModalLabel">Modal header</h3>
+                <h3 id="myModalLabel" style="margin-left: 34px; color: white;"></h3>
             </div>
             <div class="modal-body">
-                <p>One fine body…</p>
+                <div id="modal-viagem"></div>
+                <div id="modal-viagem-obs">
+                    <h4>Obs</h4>
+                    <div id="modal-viagem-exibe-obs"></div>
+                </div>
+
+                <div id="modal-confirmados-header">
+                    <h4>Passageiros</h4>
+                    <div id="modal-confirmados-detalhe" style="width: 500px; height: 40px;"></div>
+                </div>
+
+                <div id="modal-solicitados-header">
+                    <h4>Solicitações</h4>
+                    <div id="modal-solicitados-detalhe"></div>
+                </div>
             </div>
             <div class="modal-footer">
                 <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-                <button class="btn btn-primary">Save changes</button>
+                <button class="btn btn-primary">Concluir </button>
             </div>
         </div>
 
-        <!--<div class="fundo_transparente" style="display:none;">
-        </div>
-        <div id="exp_modal">
-                <div id="conteudo_modal">
-                    <div id="cabecalho_modal"></div>
-                    <div id="detalhe_modal"></div>
-                    <div id="obs_modal"></div>
-                    <div title="Passageiros confirmados" id="passageiros_modal"></div>
-                    <div title="Solicitações recentes" id="solicitacoes_modal"></div>
-                </div>
-                <div id="modal_loader" style="display: none; position: absolute; padding-left:17px; margin-top: 15px;">
-                    <img src="<?php echo base_url();?>/assets/img/loader.gif" style="width: 20px;">
-                </div>
-                <div id="btn_modal">
-                </div>
-            </div>-->
         <div class="links" id="link">
         </div>
     </div>
