@@ -737,46 +737,68 @@ class Principal extends CI_Controller {
 		if ($usuario['id_usuario'] == $buscaviagem[0]->id_usuario){
 			//Usuario criou a viagem
 			$tipo = 1;
+			$botao2 = '<button class="btn btn-primary" onclick="efetuarcarona('.$buscaviagem[0]->id_viagem.')">Efetuar Carona</button>';
 		}else{
 			//Usuario não é o criador da viagem
 			$tipo = 2;
+			$botao2 = '<button class="btn btn-success" onclick="solicitarcarona('.$buscaviagem[0]->id_viagem.')">Solicitar Carona</button>';
 		}
 
 		$buscacarona = $this->carona_ml->buscacarona($id_viagem, $tipo);
 
-		$resultado = array('viagem' => $buscaviagem, 'carona' => $buscacarona);
+		$resultado = array('viagem' => $buscaviagem, 'tipo' => $tipo, 'botao2' => $botao2, 'carona' => $buscacarona);
 		$resposta = json_encode($resultado);
 		echo $resposta;
     }
 
-	function excluirviagem($id_viagem){
-		$result = $this->viagem_ml->excluirviagem($id_viagem);
+	function solicitar_carona($id_viagem){
 
-	    $resultado = 'Carona excluida com sucesso';
-	    $resposta = json_encode($resultado);
-        echo $resposta;
-	}
+		$result = $this->usuario_ml->get_access_token();
 
-	function participarcarona($id){
+		if ($result['is_true']) {
+
+			$this->session->set_userdata(array('access_token' => $result['access_token']));
+
+		} else {
+
+			$this->session->set_userdata(array('access_token' => FALSE));
+		}
 
 		$user = $this->usuario_ml->get_user();                
-		$usuario = $user['facebook_uid'];
+		$usuario['id_usuario'] = $user['facebook_uid'];
+		$me = $this->usuario_ml->get_full_user();
+		$usuario['nome'] = $me['name'];
 
-		$criador_viagem = $this->viagem_ml->buscaviagem($id);		
+		$criador_viagem = $this->viagem_ml->buscaviagem($id_viagem);		
+
+		$busca_usuario_na_carona = $this->carona_ml->busca_usuario_na_carona($id_viagem, $usuario['id_usuario']);
 
 		if ($usuario == $criador_viagem[0]->id_usuario){
 		    
-			$resultado = 'Você já está participando dessa carona';
+			$resultado = '<div id="info" class="info_error"><span>Você já está participando dessa carona</span></div>';
 			$resposta = json_encode($resultado);
             echo $resposta;
 
-		}else{
-			$result = $this->carona_ml->insereusuario($id, $usuario);
+		}else if($busca_usuario_na_carona != null){
+			$resultado = '<div id="info" class="info_error"><span>Você já está participando dessa carona</span></div>';
+			$resposta = json_encode($resultado);
+            echo $resposta;
+		}else if($busca_usuario_na_carona == null){
+
+			$dados = array(
+				'id_viagem' => $id_viagem,
+				'id_usuario' => $usuario['id_usuario'],
+				'nome' => $usuario['nome']
+			);
+
+			$tipo = 0;
+
+			$result = $this->carona_ml->insereusuario($dados, $tipo);
 
 			if ($result == 2){
-		    	$resultado = 'Desculpe por isso. Tente novamente';
+		    	$resultado = '<div id="info" class="info_error"><span>Ops! Tente novamente</span></div>';
 		    }else if($result == 1){
-		    	$resultado = 'Passageiro inserido com sucesso';	
+		    	$resultado = '<div id="info" class="info_sucesso"><span>Solicitacao enviada com sucesso</span></div>';	
 		    }
 			
 			$resposta = json_encode($resultado);
@@ -784,28 +806,83 @@ class Principal extends CI_Controller {
 		}
 	}
     
-    function excluirUsuarioCarona($id){
-    	$user = $this->usuario_ml->get_user();                
-		$usuario = $user['facebook_uid'];
+	function excluir_viagem($id_viagem){
+		$result = $this->viagem_ml->excluirviagem($id_viagem);
 
-		$criador_viagem = $this->viagem_ml->buscaviagem($id);		
+	    $resultado = '<div id="info" class="info_sucesso">
+		    				<span>Carona excluida com sucesso</span>
+                    	</div>';
+	    $resposta = json_encode($resultado);
+        echo $resposta;
+	}
+    
+    function inserir_usuario_na_carona($id_viagem, $id_usuario){
 
-		if ($usuario == $criador_viagem[0]->id_usuario){
+    	$result = $this->usuario_ml->get_access_token();
 
-		    $result = $this->carona_ml->excluircarona($id, $usuario);
+		if ($result['is_true']) {
 
-		    if ($result == 2){
-		    	$resposta = 'Desculpe por isso. Tente novamente';
-		    }else if($result == 1){
-		    	$resposta = 'Usuario removido com sucesso';
-		    }
-		    
-            echo $resposta;
+			$this->session->set_userdata(array('access_token' => $result['access_token']));
 
-		}else{
-			$resposta = 'Voce não pode fazer isso';
-            echo $resposta;
+		} else {
+
+			$this->session->set_userdata(array('access_token' => FALSE));
 		}
+
+		$dados['id_usuario'] = $id_usuario;
+		$dados['nome'] = $this->usuario_ml->get_name_user($id_usuario);;
+		$dados['id_viagem'] = $id_viagem;
+
+		$tipo = 1;
+
+		$result = $this->carona_ml->insereusuario($dados, $tipo);
+
+		$resultado = '<div id="info" class="info_sucesso">
+		    				<span>Ops! Tente novamente</span>
+                    	</div>';
+
+		if ($result == 1){
+			$resultado = '<div id="info" class="info_sucesso">
+		    				<span><b>'.$dados['nome'].'</b> inserido com sucesso</span>
+                    	</div>';
+		}
+
+		$resposta = json_encode($resultado);
+        echo $resposta;
+    }
+
+    function remover_usuario_da_carona($id_viagem, $id_usuario){
+    	
+    	$result = $this->usuario_ml->get_access_token();
+
+		if ($result['is_true']) {
+
+			$this->session->set_userdata(array('access_token' => $result['access_token']));
+
+		} else {
+
+			$this->session->set_userdata(array('access_token' => FALSE));
+		}
+
+		$dados['id_usuario'] = $id_usuario;
+		$dados['nome'] = $this->usuario_ml->get_name_user($id_usuario);;
+		$dados['id_viagem'] = $id_viagem;
+
+		$result = $this->carona_ml->excluirusuario($dados);
+
+		$resultado = '<div id="info" class="info_sucesso">
+		    				<span>Ops! Tente novamente</span>
+                    	</div>';
+
+		if ($result == 1){
+			$resultado = '<div id="info" class="info_sucesso">
+		    				<span><b>'.$dados['nome'].'</b> removido com sucesso</span>
+                    	</div>';
+		}
+
+		$resposta = json_encode($resultado);
+        echo $resposta;
+
     }
 
     function fecharviagem($id_viagem){

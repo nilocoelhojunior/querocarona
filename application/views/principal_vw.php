@@ -55,7 +55,7 @@
                     </div>
 
                     <div class="viagem">
-                        <div id="loader_viagem" style="display: none; position: absolute; padding-left:17px; margin-top: 15px;">
+                        <div id="loader_viagem" style="display: block; position: absolute; padding-left:17px; margin-top: 15px;">
                             <img src="<?php echo base_url();?>/assets/img/loader.gif" style="width: 25px;">
                         </div>
                     </div>
@@ -82,12 +82,13 @@
 
                 <div id="modal-solicitados-header">
                     <h4>Solicitações</h4>
-                    <div id="modal-solicitados-detalhe"></div>
+                    <div id="modal-solicitados">
+                    <div id="modal-solicitados-detalhe" style="width: 105px;"></div>
+                    </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-                <button class="btn btn-primary">Concluir </button>
+                <button class="btn" data-dismiss="modal" aria-hidden="true">Voltar</button>
             </div>
         </div>
 
