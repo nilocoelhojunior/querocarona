@@ -103,7 +103,7 @@ width: 500px;
 #info span{
 position: absolute;
 margin-top: 10px;
-margin-left: 150px;
+margin-left: 100px;
 }
 
 .laborigem {
@@ -372,136 +372,28 @@ background-color: whitesmoke;
 
 /* Modal
 ----------------------------------------------------------------------------------------------------*/
-.fundo_transparente{
-}
-
-#exp_modal{
-display: none;
-width: 500px;
-height: auto;
-position: absolute;
-background-color: white;
-border-radius: 7px;
-margin-left: 350px;
-margin-top: -470px;
-}
-
-#btn_modal{
-}
-
-#cabecalho_modal{
-background: cornflowerBlue;
-height: 36px;
-border-top-left-radius: 3px;
-border-top-right-radius: 3px;
-}
-
-#cabecalho_modal b{
-font-size: 16px;
-}
-
-#detalhe_modal{
-margin-top: 5px;
-margin-left: 10px;
-}
-
-#detalhe_modal p{
-line-height: 15px;
-font-size: 14px;
-}
-
-#obs_modal{
-margin-top: 15px;
-margin-left: 10px;
-font-size: 15px;
-}
-
-#obs_modal p{
-margin-top: 5px;
-line-height: 15px;
-font-size: 14px
-}
-
-#passageiros_modal{
-margin-top: 15px;
-margin-left: 10px;
-font-size: 14px;
-}
-
-#solicitacoes_modal{
-margin-top: 80px;
-margin-left: 10px;
-font-size: 14px;
-}
-
-#confirma_solicitacao{
-margin-top: 10px;
-width: 41px;
-height: 20px;
-background-image: url("../img/confirma_solicitacao.png");
-background-size: 25px;
-background-color: transparent;
-background-repeat: no-repeat;
-cursor: pointer;
-}
-
-#recusa_solicitacao{
-margin-top: 8px;
-width: 41px;
-height: 20px;
-background-image: url("../img/cancela_solicitacao.png");
-background-size: 25px;
-background-color: transparent;
-background-repeat: no-repeat;
-cursor: pointer;
-}
-
-#close_modal{
-position: absolute;
-margin-top: -41px;
-margin-left: 10px;
-width: 40px;
-height: 40px;
-background-image: url("../img/voltar.png");
-background-size: 30px;
-background-color: transparent;
-background-repeat: no-repeat;
-cursor: pointer;
-}
-
-#close_modal:hover{
-background-size: 37px;
-}
-
-#confima_modal{
-margin-top: 160px;
-margin-left: 408px;
+.conteudo-modal{
 width: 50px;
-height: 40px;
-background-image: url("../img/confirma_modal.png");
-background-size: 35px;
-background-color: transparent;
-background-repeat: no-repeat;
-cursor: pointer;
 }
 
-#confima_modal:hover{
-background-size: 40px;
+#modal-confirmados ul{
+margin-left: -8px;
 }
 
-#excluir_modal{
-position: absolute;
-margin-top: -41px;
-margin-left: 459px;
-width: 40px;
-height: 40px;
-background-image: url("../img/lixeira.png");
-background-size: 30px;
-background-color: transparent;
-background-repeat: no-repeat;
-cursor: pointer;
+#modal-confirmados li{
+list-style: none;
+margin: 0px;
+display: inline-block;
 }
 
-#excluir_modal:hover{
-background-size: 35px;
+#modal-confirmados img{
+float: left;
+padding-right: 5px;
+margin-top: 2px;
+margin-left: 10px;
+}
+
+#modal-confirmados p{
+margin-left: 8px;
+width: 190px;
 }

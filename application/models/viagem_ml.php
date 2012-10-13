@@ -83,6 +83,7 @@ class Viagem_ml extends CI_Model{
     function fecharviagem($id_viagem){
       $status = array('status'=>0);
       $this->db->where('id_viagem', $id_viagem)->update('tb_viagem', $status);
+      return true;
     }
 
     function buscaViagem($id_viagem){
@@ -96,9 +97,9 @@ class Viagem_ml extends CI_Model{
         return $this->db->get('tb_viagem')->result();
     }
     
-    function minhasViagens($lista){
+    function minhasViagens($id_usuario){
        $a = date("Y-m-d", mktime(0, 0, 0, date("m")-1, date("d"), date("Y")));
-       $teste = array('data >' => $a, 'id_usuario' => $lista);
+       $teste = array('data >' => $a, 'id_usuario' => $id_usuario);
        return $this->db->select('*')->where($teste)->order_by('data', 'DESC')->get('tb_viagem')->result();
     }
 

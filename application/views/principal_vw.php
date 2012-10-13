@@ -77,15 +77,20 @@
 
                 <div id="modal-confirmados-header">
                     <h4>Passageiros</h4>
-                    <div id="modal-confirmados-detalhe" style="width: 500px; height: 40px;"></div>
+                    <div id="modal-confirmados">
+                        <ul id="modal-confirmados-detalhe">
+                        </ul>
+                    </div>
                 </div>
 
                 <div id="modal-solicitados-header">
                     <h4>Solicitações</h4>
-                    <div id="modal-solicitados">
-                    <div id="modal-solicitados-detalhe" style="width: 105px;"></div>
+                    <div id="modal-confirmados">
+                        <ul id="modal-solicitados-detalhe">
+                        </ul>
                     </div>
                 </div>
+                
             </div>
             <div class="modal-footer">
                 <button class="btn" data-dismiss="modal" aria-hidden="true">Voltar</button>
