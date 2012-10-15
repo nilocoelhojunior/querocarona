@@ -78,5 +78,6 @@ class Carona_ml extends CI_Model{
 				 ->where('id_usuario', $id_usuario)
 				 ->get('tb_carona')->result();
 	}
+	
 }
 ?>

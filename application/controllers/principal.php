@@ -671,7 +671,6 @@ class Principal extends CI_Controller {
 		}else if($tipo == 2){
 			$data = $this->viagem_ml->minhasViagens($usuario['id_usuario']);
 
-			print_r($data);
 			$montaviagem = "Você não possui nenhuma viagem crie já a sua";
 		}
 		
