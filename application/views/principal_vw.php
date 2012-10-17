@@ -6,7 +6,7 @@
 
         <META NAME="DESCRIPTION" CONTENT="Ofereça e solicite carona para seus amigos no facebook">
         <META NAME="ABSTRACT" CONTENT="Compartilhe carona com seus amigos no facebook">
-        <META NAME="KEYWORDS" CONTENT="querocarona,carona,caronas,viagem,sustentabilidade,mundoverde,amigos,facebook,caroneiro,caronabrasil,oferecer,solicitar,meioambiente,engarrafamento,carro">
+        <META NAME="KEYWORDS" CONTENT="carona,querocarona,caronas,viagem,sustentabilidade,mundoverde,amigos,facebook,caroneiro,caronabrasil,oferecer,solicitar,meioambiente,engarrafamento,carro">
         <META NAME="ROBOT" CONTENT="All">
         <META NAME="RATING" CONTENT="general">
         <META NAME="DISTRIBUTION" CONTENT="global">
