@@ -93,6 +93,18 @@ class Usuario_ml extends CI_Model {
 		}
 	}
 	
+	function get_friends(){
+        $query = $this->facebook->api('/me/friends');
+		
+		if ($query) {
+			$data['is_true'] = TRUE;
+			return $query;
+		} else {
+			$data['is_true'] = FALSE;
+			return $data;
+		}
+	}
+
     function set_user($user){
         $test = $this->db->select('id_usuario')->where_in('id_usuario', $user['id_usuario'])->get('tb_usuario')->result();
         if ($test == null){
