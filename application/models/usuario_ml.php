@@ -160,9 +160,9 @@ class Usuario_ml extends CI_Model {
             $id = $params['id_usuario'];
 
             if ($params['solicitante'] == 1){
-            	$message = "$userName solicitou uma carona de $origem para $destino, às $horario h em $data";
+            	$message = "Galera, estou em $origem querendo chegar ir pra $destino, por volta das $horario h de $data, alguem em ajuda ai com uma carona. vlw";
             }else{
-            	$message = "$userName ofereceu uma carona de $origem para $destino, às $horario h em $data";
+            	$message = "Galera, estou em $origem e indo pra $destino, por volta das $horario h de $data, alguem tiver afim de ir comigo. vlw";
             }
 
             //variavel que vai receber o array dinâmico
@@ -180,10 +180,9 @@ class Usuario_ml extends CI_Model {
                 //logotipo da app
                 'picture' => 'http://thonnycleuton.com/querocarona/assets/images/logo.png',
                 //aqui é onde será postada o link para a viagem que foi criada
-                'place' => 106288536069661,
-                'actions' => array ('name' => 'Deseja ir com ele? Clica aqui','link' => 'https://facebook.com/querocarona'),
+                'actions' => array ('name' => 'Deseja ir comigo? Clica aqui','link' => 'https://apps.facebook.com/querocarona'),
                 );
-            $message_tags = array('id' => $id,'name' => $userName,'offset' => 0,'type' => 'user','length' => strlen($userName));
+            //$message_tags = array('id' => $id,'name' => $userName,'offset' => 0,'type' => 'user','length' => strlen($userName));
             $privacy = array('value' => 'CUSTOM','friends' => 'SELF',);
             $wall_post['privacy'] = json_encode($privacy);
             $wall_post['message_tags'] = json_encode($message_tags);
@@ -225,7 +224,21 @@ class Usuario_ml extends CI_Model {
 			return $data;
 		}
 	}
-
+	
+	function set_notifications($facebook_uid, $access_token){
+		//notifications?access_token=234298743282904|0urKBKqK4ryZIRS-7nWx7NuGEkc&href=localhost/codeigniter&template=testando
+		
+		$post_data = "access_token=".$access_token."&template=Tem novidades na sua carona&href=https://apps.facebook.com/querocarona";
+	
+		$curl = curl_init();
+		curl_setopt($curl, CURLOPT_URL, "https://graph.facebook.com/".$facebook_uid."/notifications/");
+		curl_setopt($curl, CURLOPT_POSTFIELDS, $post_data);
+		curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+		$page = curl_exec($curl);
+		curl_close($curl);
+	}
+	
+	//ainda em testes, nenhuma feature utiliza esta fun�ao **Thonnycleuton
 	function postTimeLine(){
             $token = $this->get_access_token();
             $params = array(

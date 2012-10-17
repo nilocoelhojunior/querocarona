@@ -8,19 +8,6 @@ class Principal extends CI_Controller {
 	}
 
 	function index() {
-		//force_ssl();
-        /*Captura o usuario e a sessao*/
-		$result = $this->usuario_ml->get_access_token();
-           
-        /*Verifica se o usuario esta conectado ao facebook*/
-		if ($result['is_true']) {
-
-			$this->session->set_userdata(array('access_token' => $result['access_token']));
-
-		} else {
-
-			$this->session->set_userdata(array('access_token' => FALSE));
-		}
 
 		$user = $this->usuario_ml->get_user();                
 		
@@ -35,19 +22,16 @@ class Principal extends CI_Controller {
 		/*Carrega a view principal*/
 		$this->load->view('principal_vw');
 	}
-    
+	
+	//Exibe as notificações para o usuário
+	function notificacoes(){
+		$resultado = array("viagem" => "lol");
+		$resposta = json_encode($resultado);
+		echo $resposta;
+	}
+
     //Recebe os dados do formulario e cria uma nova viagem
     function criaviagem($tipo){
-    	$result = $this->usuario_ml->get_access_token();
-
-		if ($result['is_true']) {
-
-			$this->session->set_userdata(array('access_token' => $result['access_token']));
-
-		} else {
-
-			$this->session->set_userdata(array('access_token' => FALSE));
-		}
 
 		$user = $this->usuario_ml->get_user();                
 		$usuario['id_usuario'] = $user['facebook_uid'];
@@ -59,11 +43,13 @@ class Principal extends CI_Controller {
 			$mensagem = '<div id="info" class="info_sucesso">
 		    				<span>Carona criada com sucesso</span>
                     	</div>';
+            $tipo_msg = 'ofertou';
 		}else if($tipo == 'chk_solicitar'){
 			$info_tipo = 1;
 			$mensagem = '<div id="info" class="info_sucesso">
 		    				<span>Carona solicitada com sucesso</span>
                     	</div>';
+            $tipo_msg = 'solicitou';
 		}
 
 		if ($tipo == 'chk_ofertar' || $tipo == 'chk_solicitar'){
@@ -81,7 +67,8 @@ class Principal extends CI_Controller {
 
 			if($this->viagem_ml->setViagem($params)==true){
 			    //aqui chama a funcao para postar no mural, somente apos a viagem ser criada
-			    //$result = $this->usuario_ml->postToWall($params);
+
+			    $result = $this->usuario_ml->postToWall($params);
 			    $resultado = $mensagem;
 			}else{
 	            $resultado = '<div id="info" class="info_error">
@@ -99,7 +86,7 @@ class Principal extends CI_Controller {
     //Retorna um json com viagens suas ou dos seus amigos, dependendo do tipo recebido
     function exibeviagem($tipo){
 
-		$result = $this->usuario_ml->get_access_token();
+    	$result = $this->usuario_ml->get_access_token();
 
 		if ($result['is_true']) {
 
@@ -116,10 +103,11 @@ class Principal extends CI_Controller {
 		$usuario['nome'] = $me['name'];
 
 		/*Captura os amigos do usuario*/
-		//$amigos = $this->friends($result['access_token'], $user['facebook_uid']);
-		/*for ($i=0; $i<count($amigos['friends']); $i++){
+		/*$amigos = $this->friends($result['access_token'], $user['facebook_uid']);
+		for ($i=0; $i<count($amigos['friends']); $i++){
 			$friends [$i] = $amigos['friends'][$i]->id;
-		} */  
+		} */
+		
 		$friends = Array (
 			"639373985",
 			"653558478",
@@ -706,20 +694,9 @@ class Principal extends CI_Controller {
 		}
     }
 
-
     //Retorna um json da viagem recebida detalhando-a com os passageiros confirmados
     //e/ou solicitados, se voce for dono da viagem voce poderá ver os solicitados
     function exibecarona($id_viagem){
-    	$result = $this->usuario_ml->get_access_token();
-
-		if ($result['is_true']) {
-
-			$this->session->set_userdata(array('access_token' => $result['access_token']));
-
-		} else {
-
-			$this->session->set_userdata(array('access_token' => FALSE));
-		}
 
 		$user = $this->usuario_ml->get_user();                
 		$usuario['id_usuario'] = $user['facebook_uid'];
@@ -759,17 +736,6 @@ class Principal extends CI_Controller {
     }
 
 	function solicitar_carona($id_viagem){
-
-		$result = $this->usuario_ml->get_access_token();
-
-		if ($result['is_true']) {
-
-			$this->session->set_userdata(array('access_token' => $result['access_token']));
-
-		} else {
-
-			$this->session->set_userdata(array('access_token' => FALSE));
-		}
 
 		$user = $this->usuario_ml->get_user();                
 		$usuario['id_usuario'] = $user['facebook_uid'];
@@ -814,16 +780,6 @@ class Principal extends CI_Controller {
 	}
     
 	function excluir_viagem($id_viagem){
-		$result = $this->usuario_ml->get_access_token();
-
-		if ($result['is_true']) {
-
-			$this->session->set_userdata(array('access_token' => $result['access_token']));
-
-		} else {
-
-			$this->session->set_userdata(array('access_token' => FALSE));
-		}
 
 		$user = $this->usuario_ml->get_user();                
 		$usuario['id_usuario'] = $user['facebook_uid'];
@@ -855,17 +811,6 @@ class Principal extends CI_Controller {
     
     function inserir_usuario_na_carona($id_viagem, $id_usuario){
 
-    	$result = $this->usuario_ml->get_access_token();
-
-		if ($result['is_true']) {
-
-			$this->session->set_userdata(array('access_token' => $result['access_token']));
-
-		} else {
-
-			$this->session->set_userdata(array('access_token' => FALSE));
-		}
-
 		$dados['id_usuario'] = $id_usuario;
 		$dados['nome'] = $this->usuario_ml->get_name_user($id_usuario);;
 		$dados['id_viagem'] = $id_viagem;
@@ -885,6 +830,7 @@ class Principal extends CI_Controller {
 				$resultado = '<div id="info" class="info_sucesso">
 			    				<span><b>'.$dados['nome'].'</b> inserido(a) com sucesso</span>
 	                    	</div>';
+				$this->usuario_ml->set_notification($usuario['id_usuario'], $result['access_token']);
 			}else{
 				$resultado = '<div id="info" class="info_sucesso">
 			    				<span>Ops! Tente novamente</span>
@@ -896,23 +842,11 @@ class Principal extends CI_Controller {
                     	</div>';
         }
 		
-
 		$resposta = json_encode($resultado);
         echo $resposta;
     }
 
     function remover_usuario_da_carona($id_viagem, $id_usuario){
-    	
-    	$result = $this->usuario_ml->get_access_token();
-
-		if ($result['is_true']) {
-
-			$this->session->set_userdata(array('access_token' => $result['access_token']));
-
-		} else {
-
-			$this->session->set_userdata(array('access_token' => FALSE));
-		}
 
 		$dados['id_usuario'] = $id_usuario;
 		$dados['nome'] = $this->usuario_ml->get_name_user($id_usuario);;
@@ -947,17 +881,6 @@ class Principal extends CI_Controller {
     }
 
     function fecharviagem($id_viagem){
-
-    	$result = $this->usuario_ml->get_access_token();
-
-		if ($result['is_true']) {
-
-			$this->session->set_userdata(array('access_token' => $result['access_token']));
-
-		} else {
-
-			$this->session->set_userdata(array('access_token' => FALSE));
-		}
 
 		$user = $this->usuario_ml->get_user();                
 		$usuario['id_usuario'] = $user['facebook_uid'];

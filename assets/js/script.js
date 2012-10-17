@@ -216,24 +216,27 @@ function modalviagens(tipo){
                 }
 
                 if(resposta.tipo == 2){
+
                     $('#modal-solicitados-header').css({display:"none"});                    
+
                     if (resposta.carona == '' || resposta.carona[0].confirmada == ''){
+
                         $('#modal-confirmados-detalhe').append('<p>Nenhum passageiro confirmado</p>');
+
+                    }else{
+
+                        $.each(resposta.carona, function(i, valor){
+
+                            if(valor.confirmada == 1){
+                                $('#modal-confirmados-detalhe').append('<li><div class="conteudo-modal"><img src="https://graph.facebook.com/'+valor.id_usuario+'/picture" title="'+valor.nome+'" width="35" height="35"/></div></li>');
+                            }
+                        });  
                     }
                 }
+
                 c = 0;
                 s = 0;
-                $.each(resposta.carona, function(i, valor){
 
-                    if(valor.confirmada == 1){
-                        c++;
-                        $('#modal-confirmados-detalhe').append('<li><div class="conteudo-modal"><img src="https://graph.facebook.com/'+valor.id_usuario+'/picture" title="'+valor.nome+'" width="35" height="35"/><button class="btn btn-mini btn-link" onclick="recusar_passageiro('+valor.id_viagem+','+valor.id_usuario+')">Recusar</button></div></li>');
-                    }else if(valor.confirmada == 0){
-                        s++;
-                        $('#modal-solicitados-detalhe').append('<li><div class="conteudo-modal"><img src="https://graph.facebook.com/'+valor.id_usuario+'/picture" title="'+valor.nome+'" width="35" height="35"/><button class="btn btn-mini btn-link" onclick="aceitar_passageiro('+valor.id_viagem+','+ valor.id_usuario+')">Aceitar</button><button class="btn btn-mini btn-link" onclick="recusar_passageiro('+valor.id_viagem+','+valor.id_usuario+')">Recusar</button></div></li>');
-                    }
-                });  
-                
                 if(resposta.tipo == 1){
                     if (resposta.carona == '' || c == 0){
                         $('#modal-confirmados-detalhe').append('<p>Nenhum passageiro confirmado</p>');
@@ -241,6 +244,17 @@ function modalviagens(tipo){
                     if (resposta.carona == '' || s == 0){
                         $('#modal-solicitados-detalhe').append('<p>Nenhuma solicitação</p>');
                     }
+
+                    $.each(resposta.carona, function(i, valor){
+
+                        if(valor.confirmada == 1){
+                            c++;
+                            $('#modal-confirmados-detalhe').append('<li><div class="conteudo-modal"><img src="https://graph.facebook.com/'+valor.id_usuario+'/picture" title="'+valor.nome+'" width="35" height="35"/></div><button class="btn btn-mini btn-link" onclick="recusar_passageiro('+valor.id_viagem+','+valor.id_usuario+')">Recusar</button></li>');
+                        }else if(valor.confirmada == 0){
+                            s++;
+                            $('#modal-solicitados-detalhe').append('<li><div class="conteudo-modal"><img src="https://graph.facebook.com/'+valor.id_usuario+'/picture" title="'+valor.nome+'" width="35" height="35"/><button class="btn btn-mini btn-link" onclick="aceitar_passageiro('+valor.id_viagem+','+ valor.id_usuario+')">Aceitar</button><button class="btn btn-mini btn-link" onclick="recusar_passageiro('+valor.id_viagem+','+valor.id_usuario+')">Recusar</button></div></li>');
+                        }
+                    });  
 
                 }
 
@@ -259,6 +273,10 @@ function modalviagens(tipo){
     }else if($("#btn_amigos_viagens").hasClass('btn_amigos_viagens_ativa')){
         $("#btn_amigos_viagens").trigger('click');
     }
+}
+
+function notificacoes(){
+    
 }
 
 $(function(){
@@ -291,6 +309,8 @@ $(function(){
             }
 
         });
+
+        $('#formulario').get(0).reset();
     });
 
 	$(document).ready(function(){

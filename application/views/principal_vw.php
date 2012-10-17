@@ -2,7 +2,17 @@
     <head>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" content="IE=7" content="IE=EmulateIE7" charset="utf-8">
         
-        <title>Quero Carona Facebook</title>	
+        <title>Quero Carona Facebook</title>
+
+        <META NAME="DESCRIPTION" CONTENT="Ofereça e solicite carona para seus amigos no facebook">
+        <META NAME="ABSTRACT" CONTENT="Compartilhe carona com seus amigos no facebook">
+        <META NAME="KEYWORDS" CONTENT="querocarona,carona,caronas,viagem,sustentabilidade,mundoverde,amigos,facebook,caroneiro,caronabrasil,oferecer,solicitar,meioambiente,engarrafamento,carro">
+        <META NAME="ROBOT" CONTENT="All">
+        <META NAME="RATING" CONTENT="general">
+        <META NAME="DISTRIBUTION" CONTENT="global">
+        <META NAME="LANGUAGE" CONTENT="PT">
+
+        	
         <script type="text/javascript" src="<?php echo base_url();?>/assets/js/jquery-1.7.2.js"></script>
         <script type="text/javascript" src="<?php echo base_url();?>/assets/js/jquery-ui-1.8.20.custom.js"></script>
         <script type="text/javascript" src="<?php echo base_url();?>/assets/js/bootstrap.js"></script>
@@ -97,8 +107,8 @@
             </div>
         </div>
 
-        <div class="links" id="link">
-        </div>
+        <!--<div class="links" id="link">
+        </div>-->
     </div>
 </body>
 </html>
