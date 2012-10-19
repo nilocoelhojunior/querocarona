@@ -96,8 +96,19 @@ background: yellow;
 #info {
 height: 35px;
 position: absolute;
+display: none;
 font-size: 16px;
 width: 500px;
+}
+
+#info_conteudo_error{
+margin-top: 10px;
+margin-left: 70px;
+}
+
+#info_conteudo_sucesso{
+margin-top: 10px;
+margin-left: 70px;
 }
 
 #info span{
@@ -397,3 +408,21 @@ margin-left: 10px;
 margin-left: 8px;
 width: 190px;
 }
+
+#loader-modal{
+background-image: url('../img/loader.gif');
+width: 38px;
+height: 20px;
+background-size: 30px;
+background-repeat: no-repeat;
+display: none;
+position: absolute;
+margin-top: -200px;
+margin-left: 250px;
+}
+
+#display-modal{
+opacity: 0.1;
+filter: alpha(opacity=1);
+}
+/*________________________________________________________________________________*/

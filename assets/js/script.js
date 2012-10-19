@@ -1,21 +1,39 @@
+function mensagem(tipo, mensagem){
+
+    $('#info_conteudo_sucesso').html('');
+    $('#info_conteudo_error').html('');
+
+    if (tipo == 1){
+        $('#info_conteudo_sucesso').append(mensagem);
+        $('.info_sucesso').fadeIn(300).delay(3000).slideUp(400);
+    }else if (tipo == 2){
+        $('#info_conteudo_error').append(mensagem);
+        $('.info_error').fadeIn(300).delay(3000).slideUp(400);;
+    }
+}
+
 function exibeviagem(tipo){
     $("p").remove();
-    
+    $("span").remove();
 
     jQuery.error = console.error;
+
+    tipo;
 
     if(tipo == 1){
         $(".btn_amigos_viagens").switchClass( "btn_amigos_viagens", "btn_amigos_viagens_ativa", 1);
 
         if($("#btn_minhas_viagens").hasClass('btn_minhas_viagens_ativa')){            
             $( ".btn_minhas_viagens_ativa" ).switchClass( "btn_minhas_viagens_ativa", "btn_minhas_viagens", 1);
-        } 
+        }
+        
     }else if(tipo == 2){
         $(".btn_minhas_viagens").switchClass( "btn_minhas_viagens", "btn_minhas_viagens_ativa", 1);
 
         if($("#btn_amigos_viagens").hasClass('btn_amigos_viagens_ativa')){
             $( ".btn_amigos_viagens_ativa" ).switchClass( "btn_amigos_viagens_ativa", "btn_amigos_viagens", 1);
         }
+        
     }
 
     iurl =  "principal/exibeviagem/"+tipo;
@@ -49,8 +67,7 @@ function exibeviagem(tipo){
 }
 
 function solicitarcarona(tipo){
-
-    $('#info').remove();
+    $('#myModal').modal('hide');
 
     iurl = "principal/solicitar_carona/"+tipo;
 
@@ -63,20 +80,20 @@ function solicitarcarona(tipo){
 
             success: function(resposta){
                 $('#loader').css({display:"none"});  
-                $('#form').append(resposta);
-                $('#info').fadeIn(300).delay(3000).slideUp(400);
-                $("#btn_minhas_viagens").trigger('click');
+
+                mensagem(resposta.tipo, resposta.viagem);
+
+                $("#btn_amigos_viagens").trigger('click');
             },
 
             beforeSend: function(){
-                $('#myModal').modal('hide');
                 $('#loader').css({display:"block"});
             }
     });
 }
 
 function efetuarcarona(tipo){
-    $('#info').remove();
+
     iurl = "principal/fecharviagem/"+tipo;
     
     $.ajax({
@@ -88,8 +105,9 @@ function efetuarcarona(tipo){
 
             success: function(resposta){
                 $('#loader').css({display:"none"});  
-                $('#form').append(resposta);
-                $('#info').fadeIn(300).delay(3000).slideUp(400);
+                
+                mensagem(resposta.tipo, resposta.viagem);
+                
                 $("#btn_minhas_viagens").trigger('click');
             },
 
@@ -101,7 +119,7 @@ function efetuarcarona(tipo){
 }
 
 function excluirviagem(tipo){
-    $('#info').remove();
+    
     iurl = "principal/excluir_viagem/"+tipo;
     
     $.ajax({
@@ -113,8 +131,9 @@ function excluirviagem(tipo){
 
             success: function(resposta){
                 $('#loader').css({display:"none"});  
-                $('#form').append(resposta);
-                $('#info').fadeIn(300).delay(3000).slideUp(400);
+                
+                mensagem(resposta.tipo, resposta.viagem);
+
                 $("#btn_minhas_viagens").trigger('click');
             },
 
@@ -126,7 +145,6 @@ function excluirviagem(tipo){
 }
 
 function aceitar_passageiro(tipo, tipo2){
-    $('#info').remove();
 
     iurl = "principal/inserir_usuario_na_carona/"+tipo+"/"+tipo2;
     
@@ -139,8 +157,9 @@ function aceitar_passageiro(tipo, tipo2){
 
             success: function(resposta){
                 $('#loader').css({display:"none"});  
-                $('#form').append(resposta);
-                $('#info').fadeIn(300).delay(3000).slideUp(400);
+                
+                mensagem(resposta.tipo, resposta.viagem);
+
                 $("#btn_minhas_viagens").trigger('click');
             },
 
@@ -153,8 +172,6 @@ function aceitar_passageiro(tipo, tipo2){
 
 function recusar_passageiro(tipo, tipo2){
 
-    $('#info').remove();
-
     iurl = "principal/remover_usuario_da_carona/"+tipo+"/"+tipo2;
     
     $.ajax({
@@ -166,8 +183,9 @@ function recusar_passageiro(tipo, tipo2){
 
             success: function(resposta){
                 $('#loader').css({display:"none"});  
-                $('#form').append(resposta);
-                $('#info').fadeIn(300).delay(3000).slideUp(400);
+
+                mensagem(resposta.tipo, resposta.viagem);
+
                 $("#btn_minhas_viagens").trigger('click');
             },
 
@@ -184,10 +202,11 @@ function modalviagens(tipo){
     $('img').remove();
     $('p').remove();
     $('li').remove();
-    $('.btn-primary').remove();
-    $('.btn-success').remove();
-    $('.btn-link').remove();
+    $('#solicitarcarona').remove();
     $('#excluirviagem').remove();
+    $('#solicitarcarona').remove();
+    $('#efetuarcarona').remove();
+    
 
     iurl =  "principal/exibecarona/"+tipo;
 
@@ -200,13 +219,12 @@ function modalviagens(tipo){
             dataType: "json",
 
             success: function(resposta){ 
-
+                console.log(resposta);
                 $('#modal_loader').css({display:"none"});
                 $('#modal-solicitados-header').css({display:"block"});
 
                 $('.modal-header').append('<img src="https://graph.facebook.com/'+resposta.viagem[0].id_usuario+'/picture" width="35" height="35" style="float: left; padding-right: 5px; margin-left: -11px; margin-top: -31px;"/>');
                 $('h3').html(resposta.viagem[0].nome);
-
                 $('#modal-viagem').append('<p style="font-size: 13px;"><b>'+resposta.viagem[0].tipo_solicitacao+'</b> carona de <b>'+resposta.viagem[0].origem+'</b> para <b>'+resposta.viagem[0].destino+'</b> dia <b>'+resposta.viagem[0].data+'</b> às <b>'+resposta.viagem[0].hora+'</b>.</p>');
                 
                 if (resposta.viagem[0].obs == ''){
@@ -232,37 +250,44 @@ function modalviagens(tipo){
                             }
                         });  
                     }
-                }
 
-                c = 0;
-                s = 0;
+                }else if(resposta.tipo == 1){
 
-                if(resposta.tipo == 1){
-                    if (resposta.carona == '' || c == 0){
-                        $('#modal-confirmados-detalhe').append('<p>Nenhum passageiro confirmado</p>');
-                    }
-                    if (resposta.carona == '' || s == 0){
-                        $('#modal-solicitados-detalhe').append('<p>Nenhuma solicitação</p>');
-                    }
+                        c = 0;
+                        s = 0;
 
-                    $.each(resposta.carona, function(i, valor){
+                        $.each(resposta.carona, function(i, valor){
 
-                        if(valor.confirmada == 1){
-                            c++;
-                            $('#modal-confirmados-detalhe').append('<li><div class="conteudo-modal"><img src="https://graph.facebook.com/'+valor.id_usuario+'/picture" title="'+valor.nome+'" width="35" height="35"/></div><button class="btn btn-mini btn-link" onclick="recusar_passageiro('+valor.id_viagem+','+valor.id_usuario+')">Recusar</button></li>');
-                        }else if(valor.confirmada == 0){
-                            s++;
-                            $('#modal-solicitados-detalhe').append('<li><div class="conteudo-modal"><img src="https://graph.facebook.com/'+valor.id_usuario+'/picture" title="'+valor.nome+'" width="35" height="35"/><button class="btn btn-mini btn-link" onclick="aceitar_passageiro('+valor.id_viagem+','+ valor.id_usuario+')">Aceitar</button><button class="btn btn-mini btn-link" onclick="recusar_passageiro('+valor.id_viagem+','+valor.id_usuario+')">Recusar</button></div></li>');
+                            if(valor.confirmada == 1){
+                                c++;
+                                $('#modal-confirmados-detalhe').append('<li><div class="conteudo-modal"><img src="https://graph.facebook.com/'+valor.id_usuario+'/picture" title="'+valor.nome+'" width="35" height="35"/></div><button id="recusar_passageiro" class="btn btn-mini btn-link" onclick="recusar_passageiro('+valor.id_viagem+','+valor.id_usuario+')">Recusar</button></li>');
+                            }else if(valor.confirmada == 0){
+                                s++;
+                                $('#modal-solicitados-detalhe').append('<li><div class="conteudo-modal"><img src="https://graph.facebook.com/'+valor.id_usuario+'/picture" title="'+valor.nome+'" width="35" height="35"/><button id="aceitar_passageiro" class="btn btn-mini btn-link" onclick="aceitar_passageiro('+valor.id_viagem+','+ valor.id_usuario+')">Aceitar</button><button id="recusar_passageiro" class="btn btn-mini btn-link" onclick="recusar_passageiro('+valor.id_viagem+','+valor.id_usuario+')">Recusar</button></div></li>');
+                            }
+                        });  
+
+                        if (resposta.carona == '' || c == 0){
+                            $('#modal-confirmados-detalhe').append('<p>Nenhum passageiro confirmado</p>');
                         }
-                    });  
-
+                        if (resposta.carona == '' || s == 0){
+                            $('#modal-solicitados-detalhe').append('<p>Nenhuma solicitação</p>');
+                        }
                 }
 
                 $('.modal-footer').append(resposta.botao2);
+                $('#loader-modal').hide();
+
+                var csopacity = {
+                    'opacity': '1',
+                    'filter': 'alpha(opacity=100)'
+                }   
+                
+                $('#display-modal').css(csopacity);
             },
 
             beforeSend: function(){
-                $('#loader_viagem').css({display:"block"});
+                $('#loader-modal').show();
             }
     });
 
@@ -276,7 +301,28 @@ function modalviagens(tipo){
 }
 
 function notificacoes(){
-    
+
+    iurl =  "principal/notificacoes/"+tipo;
+
+    $.ajax({
+            type: "GET",
+
+            url: iurl,
+
+            dataType: "json",
+
+            success: function(resposta){
+                $('#loader').css({display:"none"});  
+                $('#form').append(resposta);
+                $('#info').fadeIn(300).delay(3000).slideUp(400);
+                $("#btn_minhas_viagens").trigger('click');
+            },
+
+            beforeSend: function(){
+                $('#myModal').modal('hide');
+                $('#loader').css({display:"block"});
+            }
+    });
 }
 
 $(function(){
@@ -288,19 +334,24 @@ $(function(){
     $('.btn-primary').click(function(){
 
         iurl = 'principal/criaviagem'+'/'+$(this).attr('id');
+
         $.ajax({
             type: "POST", 
 
             url: iurl,
 
-            datatype: "json",
+            dataType: "json",
 
             data: {origem: $('input:text[name=origem]').val(), destino: $('input:text[name=destino]').val(), data: $('input:text[name=data]').val(), hora: $('input:text[name=hora]').val(), obs: $('#obs').val()},
 
             success: function(resposta){
+                console.log(resposta.tipo);
+                console.log(resposta.viagem);
+
                 $('#loader').css({display:"none"});  
-                $('#form').append(resposta);
-                $('#info').fadeIn(300).delay(3000).slideUp(400);
+                
+                mensagem(resposta.tipo, resposta.viagem);
+
                 $("#btn_minhas_viagens").trigger('click');
             },
 

@@ -197,7 +197,7 @@ class Usuario_ml extends CI_Model {
             //$message_tags = array('id' => $id,'name' => $userName,'offset' => 0,'type' => 'user','length' => strlen($userName));
             $privacy = array('value' => 'CUSTOM','friends' => 'SELF',);
             $wall_post['privacy'] = json_encode($privacy);
-            $wall_post['message_tags'] = json_encode($message_tags);
+            //$wall_post['message_tags'] = json_encode($message_tags);
             //funcao que chama api para postagem no mural
             $query = $this->facebook->api('/me/feed/', 'post', $wall_post);
             //$this->postTimeLine();
@@ -252,17 +252,17 @@ class Usuario_ml extends CI_Model {
 	
 	//ainda em testes, nenhuma feature utiliza esta funçao **Thonnycleuton
 	function postTimeLine(){
-            $token = $this->get_access_token();
-            $params = array(
-                'access_token' => $token['access_token'],
-                '{object}' => 'http://samples.ogp.me/393060727406704',
-            );
-            try{
-                $result = $this->facebook->api('/me/querocarona:ride', 'POST', $params);
-                echo $result;
-            }
-            catch(FacebookApiException $e){
-                echo $e;
-            }
+        $token = $this->get_access_token();
+        $params = array(
+            'access_token' => $token['access_token'],
+            '{object}' => 'http://samples.ogp.me/393060727406704',
+        );
+        try{
+            $result = $this->facebook->api('/me/querocarona:ride', 'POST', $params);
+            echo $result;
         }
+        catch(FacebookApiException $e){
+            echo $e;
+        }
+   }
 }

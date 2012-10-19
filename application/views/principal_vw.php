@@ -30,6 +30,10 @@
                 
                 <div id="form" class="layer2">  
                     
+                    <div id="info" class="info_sucesso"><div id="info_conteudo_sucesso"></div></div>
+                    <div id="info" class="info_error"><div id="info_conteudo_error"></div></div>
+
+
                     <div id="loader" style="display: none; position: absolute; padding-left:17px; margin-top: 15px;">
                         <img src="<?php echo base_url();?>/assets/img/loader.gif" style="width: 20px;">
                     </div>
@@ -72,39 +76,47 @@
                 </div>
 
             </div>
-        
+
         <div class="modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                <h3 id="myModalLabel" style="margin-left: 34px; color: white;"></h3>
-            </div>
-            <div class="modal-body">
-                <div id="modal-viagem"></div>
-                <div id="modal-viagem-obs">
-                    <h4>Obs</h4>
-                    <div id="modal-viagem-exibe-obs"></div>
+
+            <div id="display-modal">
+
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h3 id="myModalLabel" style="margin-left: 34px; color: white;"></h3>
+                </div>
+                <div class="modal-body">
+                    <div id="modal-viagem"></div>
+                    <div id="modal-viagem-obs">
+                        <h4>Obs</h4>
+                        <div id="modal-viagem-exibe-obs"></div>
+                    </div>
+
+                    <div id="modal-confirmados-header">
+                        <h4>Passageiros</h4>
+                        <div id="modal-confirmados">
+                            <ul id="modal-confirmados-detalhe">
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div id="modal-solicitados-header">
+                        <h4>Solicitações</h4>
+                        <div id="modal-confirmados">
+                            <ul id="modal-solicitados-detalhe">
+                            </ul>
+                        </div>
+                    </div>
+                    
+                </div>
+                <div class="modal-footer">
+                    <button class="btn" id="botao_voltar" data-dismiss="modal" aria-hidden="true">Voltar</button>
                 </div>
 
-                <div id="modal-confirmados-header">
-                    <h4>Passageiros</h4>
-                    <div id="modal-confirmados">
-                        <ul id="modal-confirmados-detalhe">
-                        </ul>
-                    </div>
-                </div>
+            </div>
 
-                <div id="modal-solicitados-header">
-                    <h4>Solicitações</h4>
-                    <div id="modal-confirmados">
-                        <ul id="modal-solicitados-detalhe">
-                        </ul>
-                    </div>
-                </div>
-                
-            </div>
-            <div class="modal-footer">
-                <button class="btn" data-dismiss="modal" aria-hidden="true">Voltar</button>
-            </div>
+            <div id="loader-modal"></div>
+
         </div>
 
         <!--<div class="links" id="link">

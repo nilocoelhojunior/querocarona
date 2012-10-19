@@ -90,6 +90,10 @@ class Viagem_ml extends CI_Model{
         return $this->db->select('*')->where('id_viagem',$id_viagem)->get('tb_viagem')->result();
     }
     
+    function busca_todas_viagens(){
+        return $this->db->select('*')->where('status', 1)->get('tb_viagem')->result(); 
+    }
+
     function amigosviagens($lista,$tipo){
         $this->db->select('*')->where('status',$tipo);
         $this->db->where_in('id_usuario',$lista);

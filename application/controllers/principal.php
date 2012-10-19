@@ -11,20 +11,37 @@ class Principal extends CI_Controller {
 
 		$user = $this->usuario_ml->get_user();                
 		
-		$usuario['id_usuario'] = $user['facebook_uid'];
-		$me = $this->usuario_ml->get_full_user();
-		$usuario['nome'] = $me['name'];
-		$this->usuario_ml->set_user($usuario);
+		if(isset($user['facebook_uid'])){
+			$usuario['id_usuario'] = $user['facebook_uid'];
+			$me = $this->usuario_ml->get_full_user();
+			$usuario['nome'] = $me['name'];
+			$this->usuario_ml->set_user($usuario);
 
-		/*Atualiza status da viagem*/
-		$this->viagem_ml->atualizaViagens();
+			/*Atualiza status da viagem*/
+			$this->viagem_ml->atualizaViagens();
 
-		/*Carrega a view principal*/
-		$this->load->view('principal_vw');
+			/*Carrega a view principal*/
+			$this->load->view('principal_vw');
+		}else{
+			$this->auth->logout();
+			$this->auth->is_logged_in();
+			redirect('home', 'refresh');
+		}
 	}
 	
+	//EM DESENVOLVIMENTO
 	//Exibe as notificações para o usuário
 	function notificacoes(){
+
+		$user = $this->usuario_ml->get_user();                
+		$usuario['id_usuario'] = $user['facebook_uid'];
+
+		$viagens = $this->carona_ml->busca_todas_viagens();
+
+		for($i = 0; $i<count($viagens); $i++){
+
+		}
+
 		$resultado = array("viagem" => "lol");
 		$resposta = json_encode($resultado);
 		echo $resposta;
@@ -40,15 +57,11 @@ class Principal extends CI_Controller {
 
 		if($tipo == 'chk_ofertar'){
 			$info_tipo = 0;
-			$mensagem = '<div id="info" class="info_sucesso">
-		    				<span>Carona criada com sucesso</span>
-                    	</div>';
+			$mensagem = "Carona criada com sucesso";
             $tipo_msg = 'ofertou';
 		}else if($tipo == 'chk_solicitar'){
 			$info_tipo = 1;
-			$mensagem = '<div id="info" class="info_sucesso">
-		    				<span>Carona solicitada com sucesso</span>
-                    	</div>';
+			$mensagem = "Carona solicitada com sucesso";
             $tipo_msg = 'solicitou';
 		}
 
@@ -70,17 +83,19 @@ class Principal extends CI_Controller {
 
 			    $result = $this->usuario_ml->postToWall($params);
 			    $resultado = $mensagem;
+			    $info = 1;
 			}else{
-	            $resultado = '<div id="info" class="info_error">
-			    				                  	<span>Verifique os dados e envie novamente</span>
-	                    						  </div>';
+	            $resultado = "Verifique os dados e envie novamente";
+	            $info = 2;
 			}
 		}else {
-			$resultado = '<div id="info" class="info_error">
-			    				                  	<span>Verifique os dados e envie novamente</span>
-	                    						  </div>';
+			$resultado = "Verifique os dados e envie novamente";
+			$info = 2;
 		}	
-		echo $resultado;
+
+		$teste = array('tipo' => $info, 'viagem' => $resultado);
+		$resposta = json_encode($teste);
+		echo $resposta;    	
     }
 
     //Retorna um json com viagens suas ou dos seus amigos, dependendo do tipo recebido
@@ -159,6 +174,10 @@ class Principal extends CI_Controller {
 
 		$buscaviagem = $this->viagem_ml->buscaviagem($id_viagem);
 
+		$data = date("d/m/Y", strtotime($buscaviagem[0]->data));
+
+		$buscaviagem[0]->data = $data;
+
 		if($buscaviagem[0]->solicitante == 0){
 			$tipo_solicitacao = 'Ofertou';
 		}else if($buscaviagem[0]->solicitante == 1){
@@ -175,13 +194,13 @@ class Principal extends CI_Controller {
 			if ($buscaviagem[0]->status == 0){
 				$botao2 = ''				;
 			}else if ($buscaviagem[0]->status == 1){
-				$botao2 = '<button id="excluirviagem" class="btn" onclick="excluirviagem('.$buscaviagem[0]->id_viagem.')">Excluir</button><button class="btn btn-primary" onclick="efetuarcarona('.$buscaviagem[0]->id_viagem.')">Efetuar Carona</button>';
+				$botao2 = '<button id="excluirviagem" class="btn" onclick="excluirviagem('.$buscaviagem[0]->id_viagem.')">Excluir</button><button id="efetuarcarona" class="btn btn-primary" onclick="efetuarcarona('.$buscaviagem[0]->id_viagem.')">Efetuar Carona</button>';
 			}
 
 		}else{
 			//Usuario não é o criador da viagem
 			$tipo = 2;
-			$botao2 = '<button class="btn btn-success" onclick="solicitarcarona('.$buscaviagem[0]->id_viagem.')">Solicitar Carona</button>';
+			$botao2 = '<button id="solicitarcarona" class="btn btn-success" onclick="solicitarcarona('.$buscaviagem[0]->id_viagem.')">Solicitar Carona</button>';
 		}
 
 		$buscacarona = $this->carona_ml->buscacarona($id_viagem, $tipo);
@@ -204,14 +223,14 @@ class Principal extends CI_Controller {
 
 		if ($usuario == $criador_viagem[0]->id_usuario){
 		    
-			$resultado = '<div id="info" class="info_error"><span>Você já está participando dessa carona</span></div>';
-			$resposta = json_encode($resultado);
-            echo $resposta;
+			$resultado = 'Você já está participando dessa carona';
+			$info = 2;
 
 		}else if($busca_usuario_na_carona != null){
-			$resultado = '<div id="info" class="info_error"><span>Você já está participando dessa carona</span></div>';
-			$resposta = json_encode($resultado);
-            echo $resposta;
+
+			$resultado = 'Você já está participando dessa carona';
+			$info = 2;
+
 		}else if($busca_usuario_na_carona == null){
 
 			$dados = array(
@@ -225,14 +244,17 @@ class Principal extends CI_Controller {
 			$result = $this->carona_ml->insereusuario($dados, $tipo);
 
 			if ($result == 2){
-		    	$resultado = '<div id="info" class="info_error"><span>Ops! Tente novamente</span></div>';
+		    	$resultado = 'Ops! Tente novamente';
+		    	$info = 2;
 		    }else if($result == 1){
-		    	$resultado = '<div id="info" class="info_sucesso"><span>Solicitacao enviada com sucesso</span></div>';	
+		    	$resultado = 'Solicitacao enviada com sucesso';	
+		    	$info = 1;
 		    }
-			
-			$resposta = json_encode($resultado);
-            echo $resposta;
 		}
+
+		$result = array("tipo" => $info, "viagem" => $resultado);
+		$resposta = json_encode($result);
+        echo $resposta;
 	}
     
 	function excluir_viagem($id_viagem){
@@ -244,24 +266,22 @@ class Principal extends CI_Controller {
 
 		if ($usuario['id_usuario'] == $buscaviagem[0]->id_usuario){
 			//Usuario criou a viagem
-			$result = $this->db->viagem_ml->excluirviagem($id_viagem);
+			$result = $this->viagem_ml->excluirviagem($id_viagem);
 
 			if ($result == true){
-				$resultado = '<div id="info" class="info_sucesso">
-		    				<span>Viagem excluida com sucesso</span>
-                    	</div>';
+				$resultado = 'Viagem excluida com sucesso';
+				$info = 1;
 			}else{
-				$resultado = '<div id="info" class="info_sucesso">
-		    				<span>Ops! Tente novamente</span>
-                    	</div>';
+				$resultado = 'Ops! Tente novamente';
+				$info = 2;
 			}
 		}else{
-			$resultado = '<div id="info" class="info_sucesso">
-		    				<span>Você não pode fazer isso</span>
-                    	</div>';
+			$resultado = 'Você não pode fazer isso';
+			$info = 2;
 		}
 
-		$resposta = json_encode($resultado);
+		$mensagem = array("tipo" => $info, "viagem" => $resultado);
+		$resposta = json_encode($mensagem);
         echo $resposta;
 	}
     
@@ -283,22 +303,19 @@ class Principal extends CI_Controller {
 			$result = $this->carona_ml->insereusuario($dados, $tipo);
 
 			if ($result == 1){
-				$resultado = '<div id="info" class="info_sucesso">
-			    				<span><b>'.$dados['nome'].'</b> inserido(a) com sucesso</span>
-	                    	</div>';
-				$this->usuario_ml->set_notification($usuario['id_usuario'], $result['access_token']);
+				$resultado = '<b>'.$dados['nome'].'</b> inserido(a) com sucesso';
+				$info = 1;
 			}else{
-				$resultado = '<div id="info" class="info_sucesso">
-			    				<span>Ops! Tente novamente</span>
-	                    	</div>';
+				$resultado = 'Ops! Tente novamente';
+				$info = 2;
 			}
         }else{
-        	$resultado = '<div id="info" class="info_sucesso">
-		    				<span>Você não pode fazer isso</span>
-                    	</div>';
+        	$resultado = 'Você não pode fazer isso';
+        	$info = 2;
         }
 		
-		$resposta = json_encode($resultado);
+		$mensagem = array("tipo" => $info, "viagem" => $resultado);
+		$resposta = json_encode($mensagem);
         echo $resposta;
     }
 
@@ -318,21 +335,19 @@ class Principal extends CI_Controller {
 			$result = $this->carona_ml->excluirusuario($dados);
 
 			if ($result == 1){
-				$resultado = '<div id="info" class="info_sucesso">
-			    				<span><b>'.$dados['nome'].'</b> removido(a) com sucesso</span>
-	                    	</div>';
+				$resultado = '<b>'.$dados['nome'].'</b> removido(a) com sucesso';
+				$info = 1;
 			}else{
-				$resultado = '<div id="info" class="info_sucesso">
-			    				<span>Ops! Tente novamente</span>
-	                    	</div>';
+				$resultado = 'Ops! Tente novamente';
+				$info = 2;
 			}
         }else{
-        	$resultado = '<div id="info" class="info_sucesso">
-		    				<span>Você não pode fazer isso</span>
-                    	</div>';
+        	$resultado = 'Você não pode fazer isso';
+        	$info = 2;
         }
 
-		$resposta = json_encode($resultado);
+		$mensagem = array("tipo" => $info, "viagem" => $resultado);
+		$resposta = json_encode($mensagem);
         echo $resposta;
     }
 
@@ -348,20 +363,19 @@ class Principal extends CI_Controller {
 			$result = $this->viagem_ml->fecharviagem($id_viagem);
 
 			if ($result == true){
-				$resultado = '<div id="info" class="info_sucesso">
-		    				<span>Passageiros abordo. Boa viagem!</span>
-                    	</div>';
+				$resultado = 'Passageiros abordo. Boa viagem!';
+				$info = 1;
 			}else{
-				$resultado = '<div id="info" class="info_sucesso">
-		    				<span>Ops! Tente novamente</span>
-                    	</div>';
+				$resultado = 'Ops! Tente novamente';
+				$info = 2;
 			}
 		}else{
-			$resultado = '<div id="info" class="info_sucesso">
-		    				<span>Você não pode fazer isso</span>
-                    	</div>';
+			$resultado = 'Você não pode fazer isso';
+			$info = 2;
 		}
 
-		$resposta = json_encode($resultado);
+		$mensagem = array("tipo" => $info, "viagem" => $resultado);
+		$resposta = json_encode($mensagem);
         echo $resposta;
     }
+}
