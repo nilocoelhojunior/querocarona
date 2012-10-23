@@ -13,11 +13,11 @@ class Principal extends CI_Controller {
 		
 		if(isset($user['facebook_uid'])){
 			$usuario['id_usuario'] = $user['facebook_uid'];
-			$me = $this->usuario_ml->get_full_user();
+			$me = $this->usuario_ml->get_full_user();		// Pega todos os dados do Usuario
 			$usuario['nome'] = $me['name'];
 			$this->usuario_ml->set_user($usuario);
 
-			/*Atualiza status da viagem*/
+			/* Atualiza status da viagem */
 			$this->viagem_ml->atualizaViagens();
 
 			/*Carrega a view principal*/
