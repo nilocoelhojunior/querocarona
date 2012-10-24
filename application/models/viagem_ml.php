@@ -15,15 +15,15 @@ class Viagem_ml extends CI_Model{
        $dia = substr($dt, 0,2);
        $mes = substr($dt, 3,2);
        $r = $ano."-".$mes."-".$dia;
-       $b = strtotime($r);
+       $data_digitada = strtotime($r);
        
        # DATA system
        $atual = date("Y-m-d");
-       $a2 = substr($atual, 0,4);
-       $m2 = substr($atual, 5,2);
-       $d2 = substr($atual, 8,9);
-       $atual2 = $a2."-".$m2."-".$d2;
-       $a = strtotime($atual2);
+       $ano_atual = substr($atual, 0,4);
+       $mes_atual = substr($atual, 5,2);
+       $dia_atual = substr($atual, 8,9);
+       $atual2 = $ano_atual."-".$mes_atual."-".$dia_atual;
+       $data_atual = strtotime($atual2);
        
        #Valida HORA setada pelo user
        $h = $this->input->post('hora');
@@ -51,10 +51,10 @@ class Viagem_ml extends CI_Model{
               'obs' => $this->input->post('obs'), 
               'status' => $params['status']);
 
-       if ($b > $a){
+       if ($data_digitada > $data_atual){
           $this->db->insert('tb_viagem', $result);
           return true;
-       }else if ($b == $a){
+       }else if ($data_digitada == $data_atual){
            if($h3 >= $horaAtual3){
                 $this->db->insert('tb_viagem', $result);
                 return true;
