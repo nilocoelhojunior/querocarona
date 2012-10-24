@@ -6,8 +6,7 @@ class Home extends CI_Controller{
         parent::__construct();
     }
     
-    function index(){
-        
+    function index(){        
         $result = $this->usuario_ml->get_user();
         
         if ($result['is_true']) {

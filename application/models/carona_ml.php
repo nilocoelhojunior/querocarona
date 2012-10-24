@@ -44,16 +44,16 @@ class Carona_ml extends CI_Model{
 
 	function excluirusuario($dados){
 		$result = $this->db->select('id_viagem, id_usuario')
-							  ->where('id_usuario', $dados['id_usuario'])
+							  ->where('id_usuario', $dados['id_usuario']) // 
 							  ->where('id_viagem', $dados['id_viagem'])->get('tb_carona')->result();
 		
 		if($result != null){
 			$this->db->where('id_usuario', $dados['id_usuario'])
 					 ->where('id_viagem', $dados['id_viagem'])
 					 ->delete('tb_carona');
-			return 1;
+			return 1;	// Se ele achou o usuario ...
 		}else{
-			return 2;
+			return 2;	// Negativo...
 		}
 	}
 

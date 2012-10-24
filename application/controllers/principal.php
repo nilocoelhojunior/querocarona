@@ -102,13 +102,9 @@ class Principal extends CI_Controller {
     function exibeviagem($tipo){
 
     	$result = $this->usuario_ml->get_access_token();
-
 		if ($result['is_true']) {
-
 			$this->session->set_userdata(array('access_token' => $result['access_token']));
-
 		} else {
-
 			$this->session->set_userdata(array('access_token' => FALSE));
 		}
 
@@ -118,21 +114,19 @@ class Principal extends CI_Controller {
 		$usuario['nome'] = $me['name'];
 
 		$amigos = $this->usuario_ml->get_friends();
-
+		
 		/*Captura os amigos do usuario*/
-		for ($i=0; $i<count($amigos['data']); $i++){
+		for ($i=0; $i < count($amigos['data']); $i++){
 			$friends [$i] = $amigos['data'][$i]['id'];
 		}
 
 		if ($tipo == 1){
-			$data = $this->viagem_ml->amigosViagens($friends, 1);
-			$montaviagem = "Seus amigos nÃ£o possuem viagens";
+			$data = $this->viagem_ml->viagensDeMeusAmigos($friends, 1);
+			$montaviagem = "Seus amigos nãoo possuem viagens";
 		}else if($tipo == 2){
 			$data = $this->viagem_ml->minhasViagens($usuario['id_usuario']);
-
-			$montaviagem = "VocÃª nÃ£o possui nenhuma viagem crie jÃ¡ a sua";
+			$montaviagem = "Você não possui nenhuma viagem crie já a sua !";
 		}
-		
 		
 		if ($data == null){
 			$resultado = array("tipo" => 1, "viagem" => $montaviagem);
@@ -166,14 +160,13 @@ class Principal extends CI_Controller {
     }
 
     //Retorna um json da viagem recebida detalhando-a com os passageiros confirmados
-    //e/ou solicitados, se voce for dono da viagem voce poderÃ¡ ver os solicitados
+    //e/ou solicitados, se voce for dono da viagem voce poderá ver os solicitados
     function exibecarona($id_viagem){
 
 		$user = $this->usuario_ml->get_user();                
 		$usuario['id_usuario'] = $user['facebook_uid'];
 
 		$buscaviagem = $this->viagem_ml->buscaviagem($id_viagem);
-
 		$data = date("d/m/Y", strtotime($buscaviagem[0]->data));
 
 		$buscaviagem[0]->data = $data;
@@ -205,7 +198,12 @@ class Principal extends CI_Controller {
 
 		$buscacarona = $this->carona_ml->buscacarona($id_viagem, $tipo);
 
-		$resultado = array('viagem' => $buscaviagem, 'tipo' => $tipo, 'botao2' => $botao2, 'carona' => $buscacarona);
+		$resultado = array(
+				'viagem' => $buscaviagem,
+				'tipo' => $tipo, 
+				'botao2' => $botao2, 
+				'carona' => $buscacarona);
+		
 		$resposta = json_encode($resultado);
 		echo $resposta;
     }
@@ -310,7 +308,7 @@ class Principal extends CI_Controller {
 				$info = 2;
 			}
         }else{
-        	$resultado = 'VocÃª nÃ£o pode fazer isso';
+        	$resultado = 'Você nãoo pode fazer isso';
         	$info = 2;
         }
 		

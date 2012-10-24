@@ -68,6 +68,7 @@ class Usuario_ml extends CI_Model {
 	}
 	
 	function get_logout_url() {
+		
 		$query = $this->facebook->getLogoutUrl(array('next' => base_url()));
 		
 		if ($query) {
@@ -211,8 +212,6 @@ class Usuario_ml extends CI_Model {
 		}
     }
 	
-	//function is formatted for the following
-	//https://graph.facebook.com/ID/CONNECTION_TYPE?access_token=123456
 	function get_facebook_object($object, $facebook_uid, $access_token) {
 		$fb_connect = curl_init();  
 		curl_setopt($fb_connect, CURLOPT_URL, 'https://graph.facebook.com/'.$facebook_uid.'/'.$object.'?access_token='.$access_token);  
@@ -238,10 +237,8 @@ class Usuario_ml extends CI_Model {
 	}
 	
 	function set_notifications($facebook_uid, $access_token){
-		//notifications?access_token=234298743282904|0urKBKqK4ryZIRS-7nWx7NuGEkc&href=localhost/codeigniter&template=testando
 		
 		$post_data = "access_token=".$access_token."&template=Tem novidades na sua carona&href=https://apps.facebook.com/querocarona";
-	
 		$curl = curl_init();
 		curl_setopt($curl, CURLOPT_URL, "https://graph.facebook.com/".$facebook_uid."/notifications/");
 		curl_setopt($curl, CURLOPT_POSTFIELDS, $post_data);
