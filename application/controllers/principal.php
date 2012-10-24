@@ -30,7 +30,7 @@ class Principal extends CI_Controller {
 	}
 	
 	//EM DESENVOLVIMENTO
-	//Exibe as notificações para o usuário
+	//Exibe as notificacao para o usu�ri0
 	function notificacoes(){
 
 		$user = $this->usuario_ml->get_user();                

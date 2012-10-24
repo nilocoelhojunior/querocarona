@@ -9,13 +9,13 @@ class Viagem_ml extends CI_Model{
     	
     // Implementar data por meio do framework ...
        
-      #Valida DATA setada pelo user
+    #Valida DATA setada pelo user
        $dt = $this->input->post('data');
        $ano = substr($dt, 6,9);
        $dia = substr($dt, 0,2);
        $mes = substr($dt, 3,2);
        $r = $ano."-".$mes."-".$dia;
-       $data_setada_usuario = strtotime($r);
+       $b = strtotime($r);
        
        # DATA system
        $atual = date("Y-m-d");
@@ -23,7 +23,7 @@ class Viagem_ml extends CI_Model{
        $m2 = substr($atual, 5,2);
        $d2 = substr($atual, 8,9);
        $atual2 = $a2."-".$m2."-".$d2;
-       $data_sistema = strtotime($atual2);
+       $a = strtotime($atual2);
        
        #Valida HORA setada pelo user
        $h = $this->input->post('hora');
@@ -39,8 +39,8 @@ class Viagem_ml extends CI_Model{
        $min2 = substr($horaAtual, 3,4);
        $horaAtual2 = $ho2.":".$min2;
        $horaAtual3 = strtotime($horaAtual2);
-	
-        $result = array(
+
+       $result = array(
               'id_usuario' => $params['id_usuario'],
               'nome' => $params['nome'],
               'solicitante' => $params['solicitante'],  
@@ -51,10 +51,10 @@ class Viagem_ml extends CI_Model{
               'obs' => $this->input->post('obs'), 
               'status' => $params['status']);
 
-       if ($data_setada_usuario >= $data_sistema){
+       if ($b > $a){
           $this->db->insert('tb_viagem', $result);
           return true;
-       }else if ($data_setada_usuario == $data_sistema){
+       }else if ($b == $a){
            if($h3 >= $horaAtual3){
                 $this->db->insert('tb_viagem', $result);
                 return true;
@@ -63,7 +63,7 @@ class Viagem_ml extends CI_Model{
        }
        return false;
     }
-    
+        
     // Exclusão da viagem com o parametro da viagem ...
     function excluirviagem($id_viag){
       $id_viagem = array('id_viagem' => $id_viag);
