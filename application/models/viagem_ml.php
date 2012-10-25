@@ -103,7 +103,8 @@ class Viagem_ml extends CI_Model{
        $teste = array('data >' => $a, 'id_usuario' => $id_usuario);
        return $this->db->select('*')->where($teste)->order_by('data', 'DESC')->get('tb_viagem')->result();
     }
-
+    
+	//Atualiza todas as viagens de status 1(ativada) para 0(desativada)
     function atualizaViagens(){
       $atual = date("Y-m-d");
       $value = array('status' => 0);
