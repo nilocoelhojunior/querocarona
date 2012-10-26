@@ -28,24 +28,6 @@ class Principal extends CI_Controller {
 			redirect('home', 'refresh');
 		}
 	}
-	
-	//EM DESENVOLVIMENTO
-	//Exibe as notificacao para o usuári0
-	function notificacoes(){
-
-		$user = $this->usuario_ml->get_user();                
-		$usuario['id_usuario'] = $user['facebook_uid'];
-
-		$viagens = $this->carona_ml->busca_todas_viagens();
-
-		for($i = 0; $i<count($viagens); $i++){
-
-		}
-
-		$resultado = array("viagem" => "lol");
-		$resposta = json_encode($resultado);
-		echo $resposta;
-	}
 
     //Recebe os dados do formulario e cria uma nova viagem
     function criaviagem($tipo){
@@ -78,12 +60,16 @@ class Principal extends CI_Controller {
 			    'obs' => $this->input->post('obs')
 			);
 
-			if($this->viagem_ml->setViagem($params)==true){
-			    //aqui chama a funcao para postar no mural, somente apos a viagem ser criada
+			if ($params['destino'] != '' && $params['origem'] != ''){
 
-			    $result = $this->usuario_ml->postToWall($params);
-			    $resultado = $mensagem;
-			    $info = 1;
+				if($this->viagem_ml->setViagem($params)==true){
+				    //aqui chama a funcao para postar no mural, somente apos a viagem ser criada
+
+				    $result = $this->usuario_ml->postToWall($params);
+				    $resultado = $mensagem;
+				    $info = 1;
+
+				}
 			}else{
 	            $resultado = "Verifique os dados e envie novamente";
 	            $info = 2;
@@ -122,10 +108,10 @@ class Principal extends CI_Controller {
 
 		if ($tipo == 1){
 			$data = $this->viagem_ml->viagensDeMeusAmigos($friends, 1);
-			$montaviagem = "Seus amigos nãoo possuem viagens";
+			$montaviagem = "Seus amigos n&atilde;o possuem viagens";
 		}else if($tipo == 2){
 			$data = $this->viagem_ml->minhasViagens($usuario['id_usuario']);
-			$montaviagem = "Você não possui nenhuma viagem crie já a sua !";
+			$montaviagem = "Voc&ecirc; não possui nenhuma viagem crie j&aacute; a sua !";
 		}
 		
 		if ($data == null){
@@ -190,13 +176,15 @@ class Principal extends CI_Controller {
 				$botao2 = '<button id="excluirviagem" class="btn" onclick="excluirviagem('.$buscaviagem[0]->id_viagem.')">Excluir</button><button id="efetuarcarona" class="btn btn-primary" onclick="efetuarcarona('.$buscaviagem[0]->id_viagem.')">Efetuar Carona</button>';
 			}
 
+			$buscacarona = $this->carona_ml->buscacarona($id_viagem, $tipo);
+
 		}else{
 			//Usuario nÃ£o Ã© o criador da viagem
 			$tipo = 2;
 			$botao2 = '<button id="solicitarcarona" class="btn btn-success" onclick="solicitarcarona('.$buscaviagem[0]->id_viagem.')">Solicitar Carona</button>';
-		}
 
-		$buscacarona = $this->carona_ml->buscacarona($id_viagem, $tipo);
+			$buscacarona = $this->carona_ml->buscacarona($id_viagem, $tipo);		
+		}
 
 		$resultado = array(
 				'viagem' => $buscaviagem,
@@ -208,6 +196,7 @@ class Principal extends CI_Controller {
 		echo $resposta;
     }
 
+    //Recebe um $id_viagem de um amigo e o usuario vai solicitar uma carona
 	function solicitar_carona($id_viagem){
 
 		$user = $this->usuario_ml->get_user();                
@@ -221,12 +210,12 @@ class Principal extends CI_Controller {
 
 		if ($usuario == $criador_viagem[0]->id_usuario){
 		    
-			$resultado = 'VocÃª jÃ¡ estÃ¡ participando dessa carona';
+			$resultado = 'Voc&ecirc; j&aacute; est&aacute; participando dessa carona';
 			$info = 2;
 
 		}else if($busca_usuario_na_carona != null){
 
-			$resultado = 'VocÃª jÃ¡ estÃ¡ participando dessa carona';
+			$resultado = 'Voc&ecirc; j&aacute; est&aacute; participando dessa carona';
 			$info = 2;
 
 		}else if($busca_usuario_na_carona == null){
@@ -245,7 +234,7 @@ class Principal extends CI_Controller {
 		    	$resultado = 'Ops! Tente novamente';
 		    	$info = 2;
 		    }else if($result == 1){
-		    	$resultado = 'Solicitacao enviada com sucesso';	
+		    	$resultado = 'Solicita&ccedil;&atilde;o enviada com sucesso';	
 		    	$info = 1;
 		    }
 		}
@@ -255,6 +244,7 @@ class Principal extends CI_Controller {
         echo $resposta;
 	}
     
+    //Usuario exclui uma viagem sua
 	function excluir_viagem($id_viagem){
 
 		$user = $this->usuario_ml->get_user();                
@@ -274,7 +264,7 @@ class Principal extends CI_Controller {
 				$info = 2;
 			}
 		}else{
-			$resultado = 'VocÃª nÃ£o pode fazer isso';
+			$resultado = 'Voc&ecirc; n&atilde;o pode fazer isso';
 			$info = 2;
 		}
 
@@ -283,6 +273,7 @@ class Principal extends CI_Controller {
         echo $resposta;
 	}
     
+    //Usuario seleciona um amigo $id_usuario e insere ele na sua viagem $id_viagem
     function inserir_usuario_na_carona($id_viagem, $id_usuario){
 
 		$dados['id_usuario'] = $id_usuario;
@@ -308,7 +299,7 @@ class Principal extends CI_Controller {
 				$info = 2;
 			}
         }else{
-        	$resultado = 'Você nãoo pode fazer isso';
+        	$resultado = 'Voc&ecirc; n&atilde;o pode fazer isso';
         	$info = 2;
         }
 		
@@ -317,6 +308,7 @@ class Principal extends CI_Controller {
         echo $resposta;
     }
 
+    //Usuario seleciona um amigo $id_usuario e exclui ele da sua viagem $id_viagem
     function remover_usuario_da_carona($id_viagem, $id_usuario){
 
 		$dados['id_usuario'] = $id_usuario;
@@ -340,7 +332,7 @@ class Principal extends CI_Controller {
 				$info = 2;
 			}
         }else{
-        	$resultado = 'VocÃª nÃ£o pode fazer isso';
+        	$resultado = 'Voc&ecirc; n&atilde;o pode fazer isso';
         	$info = 2;
         }
 
@@ -349,6 +341,7 @@ class Principal extends CI_Controller {
         echo $resposta;
     }
 
+    //Usuario realiza sua viagem $id_viagem antes do data prevista
     function fecharviagem($id_viagem){
 
 		$user = $this->usuario_ml->get_user();                
@@ -368,7 +361,7 @@ class Principal extends CI_Controller {
 				$info = 2;
 			}
 		}else{
-			$resultado = 'VocÃª nÃ£o pode fazer isso';
+			$resultado = 'Voc&ecirc; n&atilde;o pode fazer isso';
 			$info = 2;
 		}
 

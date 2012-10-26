@@ -47,7 +47,7 @@ function exibeviagem(tipo){
             dataType: "json",
 
             success: function(resposta){ 
-                $('#loader_viagem').css({display:"none"});
+                $('#loader_viagem').hide();
 
                 if(resposta.tipo == 1){
                     $('.viagem').append('<span style="position: absolute; margin-left: 20px; margin-top: 20px; font-size: 16px;">'+resposta.viagem+'</span>');
@@ -61,7 +61,7 @@ function exibeviagem(tipo){
             },
 
             beforeSend: function(){
-                $('#loader_viagem').css({display:"block"});
+                $('#loader_viagem').show();
             }
     });
 }
@@ -79,15 +79,13 @@ function solicitarcarona(tipo){
             dataType: "json",
 
             success: function(resposta){
-                $('#loader').css({display:"none"});  
+                $('#loader').hide();  
 
                 mensagem(resposta.tipo, resposta.viagem);
-
-                $("#btn_amigos_viagens").trigger('click');
             },
 
             beforeSend: function(){
-                $('#loader').css({display:"block"});
+                $('#loader').show();
             }
     });
 }
@@ -104,16 +102,14 @@ function efetuarcarona(tipo){
             dataType: "json",
 
             success: function(resposta){
-                $('#loader').css({display:"none"});  
+                $('#loader').hide(); 
                 
                 mensagem(resposta.tipo, resposta.viagem);
-                
-                $("#btn_minhas_viagens").trigger('click');
             },
 
             beforeSend: function(){
                 $('#myModal').modal('hide');
-                $('#loader').css({display:"block"});
+                $('#loader_viagem').show();
             }
     });
 }
@@ -130,7 +126,7 @@ function excluirviagem(tipo){
             dataType: "json",
 
             success: function(resposta){
-                $('#loader').css({display:"none"});  
+                $('#loader').hide(); 
                 
                 mensagem(resposta.tipo, resposta.viagem);
 
@@ -139,7 +135,7 @@ function excluirviagem(tipo){
 
             beforeSend: function(){
                 $('#myModal').modal('hide');
-                $('#loader').css({display:"block"});
+                $('#loader_viagem').show();
             }
     });
 }
@@ -156,16 +152,14 @@ function aceitar_passageiro(tipo, tipo2){
             dataType: "json",
 
             success: function(resposta){
-                $('#loader').css({display:"none"});  
+                $('#loader').hide();  
                 
                 mensagem(resposta.tipo, resposta.viagem);
-
-                $("#btn_minhas_viagens").trigger('click');
             },
 
             beforeSend: function(){
                 $('#myModal').modal('hide');
-                $('#loader').css({display:"block"});
+                $('#loader_viagem').show();
             }
     });
 }
@@ -182,16 +176,14 @@ function recusar_passageiro(tipo, tipo2){
             dataType: "json",
 
             success: function(resposta){
-                $('#loader').css({display:"none"});  
+                $('#loader').hide(); 
 
                 mensagem(resposta.tipo, resposta.viagem);
-
-                $("#btn_minhas_viagens").trigger('click');
             },
 
             beforeSend: function(){
                 $('#myModal').modal('hide');
-                $('#loader').css({display:"block"});
+                $('#loader_viagem').show();
             }
     });
 }
@@ -199,7 +191,7 @@ function recusar_passageiro(tipo, tipo2){
 function modalviagens(tipo){
 
     $('h3').html('');
-    $('img').remove();
+    $('.modal-header img').remove();
     $('p').remove();
     $('li').remove();
     $('#solicitarcarona').remove();
@@ -219,8 +211,7 @@ function modalviagens(tipo){
             dataType: "json",
 
             success: function(resposta){ 
-                console.log(resposta);
-                $('#modal_loader').css({display:"none"});
+                $('#modal_loader').hide();
                 $('#modal-solicitados-header').css({display:"block"});
 
                 $('.modal-header').append('<img src="https://graph.facebook.com/'+resposta.viagem[0].id_usuario+'/picture" width="35" height="35" style="float: left; padding-right: 5px; margin-left: -11px; margin-top: -31px;"/>');
@@ -312,7 +303,7 @@ function notificacoes(){
             dataType: "json",
 
             success: function(resposta){
-                $('#loader').css({display:"none"});  
+                $('#loader').hide();  
                 $('#form').append(resposta);
                 $('#info').fadeIn(300).delay(3000).slideUp(400);
                 $("#btn_minhas_viagens").trigger('click');
@@ -320,7 +311,7 @@ function notificacoes(){
 
             beforeSend: function(){
                 $('#myModal').modal('hide');
-                $('#loader').css({display:"block"});
+                $('#loader_viagem').show();
             }
     });
 }
@@ -348,7 +339,7 @@ $(function(){
                 console.log(resposta.tipo);
                 console.log(resposta.viagem);
 
-                $('#loader').css({display:"none"});  
+                $('#loader').hide();  
                 
                 mensagem(resposta.tipo, resposta.viagem);
 
@@ -356,12 +347,10 @@ $(function(){
             },
 
             beforeSend: function(){
-                $('#loader').css({display:"block"});
+                $('#loader').show();
             }
 
         });
-
-        $('#formulario').get(0).reset();
     });
 
 	$(document).ready(function(){

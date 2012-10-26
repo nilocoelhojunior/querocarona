@@ -58,15 +58,18 @@ class Carona_ml extends CI_Model{
 	}
 
 	function buscacarona($id_viagem, $tipo){
-		
+		$user = $this->usuario_ml->get_user();                
+		$usuario = $user['facebook_uid'];
+
 		if ($tipo == 1){
 			$result = $this->db->select()
 						   ->where('id_viagem', $id_viagem)
 						   ->get('tb_carona')->result();	
 		}else{
+			//busco minhas solicitações na viagem 
+			$condicao = 'id_viagem = '.$id_viagem.' AND confirmada=1 OR id_viagem = '.$id_viagem.' AND id_usuario='.$usuario.'';
 			$result = $this->db->select()
-						   ->where('id_viagem', $id_viagem)
-						   ->where('confirmada', '1')
+						   ->where($condicao)
 						   ->get('tb_carona')->result();	
 		}
 		return $result;

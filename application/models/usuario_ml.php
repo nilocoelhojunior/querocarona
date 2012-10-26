@@ -159,6 +159,26 @@ class Usuario_ml extends CI_Model {
 			return $data;
 		}
 	}
+
+	//envia notificacao para usarios do facebook
+	function set_notification($recipient_userid){
+		
+		$data = array(
+				'href'=> 'https://apps.facebook.com/querocarona/',
+				'access_token'=> '234298743282904|0urKBKqK4ryZIRS-7nWx7NuGEkc',
+				'template'=> 'Voc&ecirc; tem novas intera&ccedil;&otilde;es na sua viagem em Quero Carona!'
+		);
+		$sendnotification = $this->facebook->api('/'.$recipient_userid.'/notifications', 'post', $data);
+            //$this->postTimeLine();
+		
+		if ($sendnotification) {
+			$data['is_true'] = TRUE;
+			return $data;
+		} else {
+			$data['is_true'] = FALSE;
+			return $data;
+		}
+	}
         
         //Funcao para postar no mural do autor da viagem
     function postToWall ($params){
@@ -173,9 +193,9 @@ class Usuario_ml extends CI_Model {
             $id = $params['id_usuario'];
 
             if ($params['solicitante'] == 1){
-            	$message = "Galera, estou em $origem querendo chegar ir pra $destino, por volta das $horario h de $data, alguem em ajuda ai com uma carona. vlw";
+            	$message = "Galera, estou em $origem querendo ir pra $destino, por volta das $horario h de $data, algu&eacute;m em ajuda ai com uma carona.";
             }else{
-            	$message = "Galera, estou em $origem e indo pra $destino, por volta das $horario h de $data, alguem tiver afim de ir comigo. vlw";
+            	$message = "Galera, estou em $origem e indo pra $destino, por volta das $horario h de $data, se alguem estiver afim de uma carona.";
             }
 
             //variavel que vai receber o array dinâmico
@@ -187,9 +207,9 @@ class Usuario_ml extends CI_Model {
                 //link para o name acima
                 'link' => 'https://facebook.com/querocarona',
                 //Slogan
-                'caption' => "É assim que eu vou.",
+                'caption' => "&Eacute; assim que eu vou.",
                 //Espaço reservado para uma descricao da app
-                'description' => 'Se você vai pra algum lugar e quer oferecer ou pedir carona, este é o lugar.',
+                'description' => 'Se voc&ecirc; vai pra algum lugar e quer oferecer ou pedir carona, este &eacute; o lugar.',
                 //logotipo da app
                 'picture' => 'http://thonnycleuton.com/querocarona/assets/images/logo.png',
                 //aqui é onde será postada o link para a viagem que foi criada
@@ -234,17 +254,6 @@ class Usuario_ml extends CI_Model {
 			
 			return $data;
 		}
-	}
-	
-	function set_notifications($facebook_uid, $access_token){
-		
-		$post_data = "access_token=".$access_token."&template=Tem novidades na sua carona&href=https://apps.facebook.com/querocarona";
-		$curl = curl_init();
-		curl_setopt($curl, CURLOPT_URL, "https://graph.facebook.com/".$facebook_uid."/notifications/");
-		curl_setopt($curl, CURLOPT_POSTFIELDS, $post_data);
-		curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-		$page = curl_exec($curl);
-		curl_close($curl);
 	}
 	
 	//ainda em testes, nenhuma feature utiliza esta fun�ao **Thonnycleuton

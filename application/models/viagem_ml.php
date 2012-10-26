@@ -3,13 +3,13 @@ class Viagem_ml extends CI_Model{
     
     function __construct() {
         parent::__construct();
+
+        date_default_timezone_set("Brazil/East");
     }
 
     function setViagem($params){
-    	
-    // Implementar data por meio do framework ...
-       
-    #Valida DATA setada pelo user
+      // Implementar data por meio do framework ...
+      #Valida DATA setada pelo user
        $dt = $this->input->post('data');
        $ano = substr($dt, 6,9);
        $dia = substr($dt, 0,2);
@@ -26,7 +26,7 @@ class Viagem_ml extends CI_Model{
        $data_atual = strtotime($atual2);
        
        #Valida HORA setada pelo user
-       $h = $this->input->post('hora');
+       $h = $this->input->post('hora');       
        $hora = substr($h, 0,2);
        $minuto = substr($h, 3,4);
        $h2 = $hora.":".$minuto;
