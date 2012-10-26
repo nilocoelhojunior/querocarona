@@ -138,6 +138,7 @@ class Principal extends CI_Controller {
 				$montaviagem->$key->hora = $hora;
 				$montaviagem->$key->id_usuario = $value->id_usuario;
 				$montaviagem->$key->id_viagem = $value->id_viagem;
+				$montaviagem->$key->status = $value->status;
 			}
 		$resultado = array("tipo" => 2, "viagem" => $montaviagem);
 		$resposta = json_encode($resultado);
@@ -234,7 +235,11 @@ class Principal extends CI_Controller {
 		    	$resultado = 'Ops! Tente novamente';
 		    	$info = 2;
 		    }else if($result == 1){
-		    	$resultado = 'Solicita&ccedil;&atilde;o enviada com sucesso';	
+		    	$resultado = 'Solicita&ccedil;&atilde;o enviada com sucesso';
+
+		    	//envia notificação para o usuario
+		    	$this->usuario_ml->set_notification($criador_viagem[0]->id_usuario);
+
 		    	$info = 1;
 		    }
 		}
@@ -293,6 +298,10 @@ class Principal extends CI_Controller {
 
 			if ($result == 1){
 				$resultado = '<b>'.$dados['nome'].'</b> inserido(a) com sucesso';
+
+				//envia notificação para o usuario
+				$this->usuario_ml->set_notification($id_usuario);
+
 				$info = 1;
 			}else{
 				$resultado = 'Ops! Tente novamente';
@@ -326,6 +335,10 @@ class Principal extends CI_Controller {
 
 			if ($result == 1){
 				$resultado = '<b>'.$dados['nome'].'</b> removido(a) com sucesso';
+
+				//envia notificação para o usuario
+				$this->usuario_ml->set_notification($id_usuario);
+
 				$info = 1;
 			}else{
 				$resultado = 'Ops! Tente novamente';
