@@ -30,7 +30,7 @@ class CI_Session {
 	var $sess_use_database			= FALSE;
 	var $sess_table_name			= '';
 	var $sess_expiration			= 7200;
-	var $sess_expire_on_close		= FALSE;
+	var $sess_expire_on_close		= TRUE;
 	var $sess_match_ip				= FALSE;
 	var $sess_match_useragent		= TRUE;
 	var $sess_cookie_name			= 'ci_session';

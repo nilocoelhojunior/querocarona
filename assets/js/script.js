@@ -56,6 +56,7 @@ function exibeviagem(tipo){
                         $.each(valor, function(n, nome){
                             console.log(nome);
                             if(nome.status == 0){
+                                console.log(nome.status);
                                 $('.viagem').append('<p style="opacity: 0.5;" onclick="modalviagens('+nome.id_viagem+');"><img src="https://graph.facebook.com/'+nome.id_usuario+'/picture" width="30" height="30" style="float:left; padding-right: 5px; margin-top: 2px;"/><b>'+nome.nome+'</b> '+nome.tipo+' carona de <b>'+nome.origem+'</b> para <b>'+nome.destino+'</b> dia <b>'+nome.data+'</b> às <b>'+nome.hora+'</b>.</p>');
                             }else{
                                 $('.viagem').append('<p onclick="modalviagens('+nome.id_viagem+');"><img src="https://graph.facebook.com/'+nome.id_usuario+'/picture" width="30" height="30" style="float:left; padding-right: 5px; margin-top: 2px;"/><b>'+nome.nome+'</b> '+nome.tipo+' carona de <b>'+nome.origem+'</b> para <b>'+nome.destino+'</b> dia <b>'+nome.data+'</b> às <b>'+nome.hora+'</b>.</p>');
@@ -198,6 +199,7 @@ function modalviagens(tipo){
     $('h3').html('');
     $('#modal-viagem-exibe-obs').html('');
     $('#modal-confirmados-detalhe').html('');
+    $('#modal-solicitados-detalhe').html('');
     $('.modal-header img').remove();
     $('#display-modal p').remove();
     $('#solicitarcarona').remove();
@@ -231,8 +233,6 @@ function modalviagens(tipo){
                 }
 
                 if(resposta.tipo == 2){
-
-                    //$('#modal-solicitados-header').css({display:"none"});                    
 
                     if (resposta.carona == '' || resposta.carona[0].confirmada == ''){
 

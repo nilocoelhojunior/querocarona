@@ -1195,7 +1195,7 @@ abstract class BaseFacebook
    *
    * @return  an array mapping key to value
    */
-  protected function getMetadataCookie() {
+  public function getMetadataCookie() {
     $cookie_name = $this->getMetadataCookieName();
     if (!array_key_exists($cookie_name, $_COOKIE)) {
       return array();
