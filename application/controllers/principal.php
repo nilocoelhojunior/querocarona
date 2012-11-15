@@ -1,14 +1,19 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 class Principal extends CI_Controller {
-	var $usuario;
+	
 	function __construct(){
 		parent::__construct();
-		$this->load->helper('cookie');
+
+		error_reporting(0);
+		ini_set(“display_errors”, 0 );
 	}
 
-	function index() {
+	function index($id_viagem) {	
+		$this->home($id_viagem);
+	}
 
+	function home($id_viagem){
 		$result = $this->usuario_ml->get_user();
 
 		if ($result['is_true']) {
@@ -26,8 +31,10 @@ class Principal extends CI_Controller {
 			/* Atualiza status da viagem */
 			$this->viagem_ml->atualizaViagens();
 
+			$dados = array('viagem'=>$id_viagem);
+			
 			/*Carrega a view principal*/
-			$this->load->view('principal_vw');
+			$this->load->view('principal_vw', $dados);
 
         } else {
             $string = $this->facebook->getLoginURL($this->config->item('facebook_login_parameters'));
@@ -61,15 +68,19 @@ class Principal extends CI_Controller {
 			    'obs' => $this->input->post('obs')
 			);
 
-			if ($params['destino'] != '' && $params['origem'] != ''){
+			$resultado = "Verifique os dados e envie novamente";
+			$info = 2;
+			if ($params['destino'] != '' && $params['origem'] != '' && $params['data'] && $params['hora']){
+				
+				$post = $this->viagem_ml->setViagem($params);
 
-				if($this->viagem_ml->setViagem($params)==true){
+				if($post){
 				    //aqui chama a funcao para postar no mural, somente apos a viagem ser criada
-
+					$params['id_viagem'] = $post;
+					
 				    $result = $this->usuario_ml->postToWall($params);
 				    $resultado = $mensagem;
 				    $info = 1;
-
 				}
 			}else{
 	            $resultado = "Verifique os dados e envie novamente";
@@ -82,7 +93,7 @@ class Principal extends CI_Controller {
 
 		$teste = array('tipo' => $info, 'viagem' => $resultado);
 		$resposta = json_encode($teste);
-		echo $resposta; 
+		echo $resposta;
     }
 
     //Retorna um json com viagens suas ou dos seus amigos, dependendo do tipo recebido
@@ -97,11 +108,10 @@ class Principal extends CI_Controller {
 			}
 
 			$data = $this->viagem_ml->viagensDeMeusAmigos($friends, 1);
-			$montaviagem = "Seus amigos n&atilde;o possuem viagens";
-		}else if($tipo == 2){
-			$this->usuario;
+			$montaviagem = "Seus amigos não possuem viagens";
+		}else if($tipo == 2){			
 			$data = $this->viagem_ml->minhasViagens($this->session->userdata['facebook_uid']);
-			$montaviagem = "Voc&ecirc; n&atilde;o possui nenhuma viagem crie j&aacute; a sua!";
+			$montaviagem = "Você não possui nenhuma viagem crie já a sua!";
 		}
 		
 		if ($data == null){
@@ -193,12 +203,12 @@ class Principal extends CI_Controller {
 
 		if ($this->session->userdata('facebook_uid') == $criador_viagem[0]->id_usuario){
 		    
-			$resultado = 'Voc&ecirc; j&aacute; est&aacute; participando dessa carona';
+			$resultado = 'Você já está participando dessa carona';
 			$info = 2;
 
 		}else if($busca_usuario_na_carona != null){
 
-			$resultado = 'Voc&ecirc; j&aacute; est&aacute; participando dessa carona';
+			$resultado = 'Por favor aguarde a confirmacao da sua carona';
 			$info = 2;
 
 		}else if($busca_usuario_na_carona == null){
@@ -217,10 +227,11 @@ class Principal extends CI_Controller {
 		    	$resultado = 'Ops! Tente novamente';
 		    	$info = 2;
 		    }else if($result == 1){
-		    	$resultado = 'Solicita&ccedil;&atilde;o enviada com sucesso';
+		    	$resultado = 'Solicitação enviada com sucesso';
+				$message = '@['.$this->session->userdata('facebook_uid').'] quer ir na carona que voce criou';
 
 		    	//envia notificação para o usuario
-		    	$this->usuario_ml->set_notification($criador_viagem[0]->id_usuario);
+		    	$this->usuario_ml->set_notification($criador_viagem[0]->id_usuario, $message, $criador_viagem[0]->id_viagem);
 
 		    	$info = 1;
 		    }
@@ -248,7 +259,7 @@ class Principal extends CI_Controller {
 				$info = 2;
 			}
 		}else{
-			$resultado = 'Voc&ecirc; n&atilde;o pode fazer isso';
+			$resultado = 'Você não pode fazer isso';
 			$info = 2;
 		}
 
@@ -260,8 +271,10 @@ class Principal extends CI_Controller {
     //Usuario seleciona um amigo $id_usuario e insere ele na sua viagem $id_viagem
     function inserir_usuario_na_carona($id_viagem, $id_usuario){
 
+    	$me = $this->usuario_ml->get_name_user($id_usuario);
+
 		$dados['id_usuario'] = $id_usuario;
-		$dados['nome'] = $this->session->userdata('name_uid');
+		$dados['nome'] = $me;
 		$dados['id_viagem'] = $id_viagem;
 
 		$tipo = 1;
@@ -276,7 +289,9 @@ class Principal extends CI_Controller {
 				$resultado = '<b>'.$dados['nome'].'</b> inserido(a) com sucesso';
 
 				//envia notificação para o usuario
-				$this->usuario_ml->set_notification($id_usuario);
+				$message = 'Parabens, sua solicitacao de carona foi aceita!';
+				$message_notifications = '@['.$this->session->userdata('facebook_uid').'] confirmou voce na carona!';
+				$this->usuario_ml->set_notification($id_usuario, $message_notifications, $id_viagem);
 
 				$info = 1;
 			}else{
@@ -284,7 +299,7 @@ class Principal extends CI_Controller {
 				$info = 2;
 			}
         }else{
-        	$resultado = 'Voc&ecirc; n&atilde;o pode fazer isso';
+        	$resultado = 'Você não pode fazer isso';
         	$info = 2;
         }
 		
@@ -296,11 +311,15 @@ class Principal extends CI_Controller {
     //Usuario seleciona um amigo $id_usuario e exclui ele da sua viagem $id_viagem
     function remover_usuario_da_carona($id_viagem, $id_usuario){
 
+		$me = $this->usuario_ml->get_name_user($id_usuario);
+
 		$dados['id_usuario'] = $id_usuario;
-		$dados['nome'] = $this->session->userdata('name_uid');
+		$dados['nome'] = $me;
 		$dados['id_viagem'] = $id_viagem;
 
 		$buscaviagem = $this->viagem_ml->buscaviagem($id_viagem);
+
+		$busca_usuario_na_carona = $this->carona_ml->busca_usuario_na_carona($id_viagem, $this->session->userdata('facebook_uid'));
 
 		if ($this->session->userdata('facebook_uid') == $buscaviagem[0]->id_usuario){
 
@@ -310,15 +329,33 @@ class Principal extends CI_Controller {
 				$resultado = '<b>'.$dados['nome'].'</b> removido(a) com sucesso';
 
 				//envia notificação para o usuario
-				$this->usuario_ml->set_notification($id_usuario);
+				$message_not = '@['.$this->session->userdata('facebook_uid').'] removeu voce da carona. Veja com seu amigo o que aconteceu';
+				$this->usuario_ml->set_notification($id_usuario, $message_not, $id_viagem);
 
 				$info = 1;
 			}else{
 				$resultado = 'Ops! Tente novamente';
 				$info = 2;
 			}
+        }else if($busca_usuario_na_carona != null){
+        	$resultado = 'Você não pode fazer isso';
+
+        	$result = $this->carona_ml->excluirusuario($dados);
+
+			if ($result == 1){
+				$resultado = 'Voce foi removido(a) da carona';
+
+				//envia notificação para o usuario
+				$message_not = '@['.$this->session->userdata('facebook_uid').'] saiu da carona. Veja com seu amigo o que aconteceu';
+				$this->usuario_ml->set_notification($buscaviagem[0]->id_usuario, $message_not, $id_viagem);
+
+				$info = 1;
+			}else{
+				$resultado = 'Ops! Tente novamente';
+				$info = 2;
+			}$info = 1;
         }else{
-        	$resultado = 'Voc&ecirc; n&atilde;o pode fazer isso';
+        	$resultado = 'Você não pode fazer isso';
         	$info = 2;
         }
 
@@ -344,7 +381,7 @@ class Principal extends CI_Controller {
 				$info = 2;
 			}
 		}else{
-			$resultado = 'Voc&ecirc; n&atilde;o pode fazer isso';
+			$resultado = 'Você não pode fazer isso';
 			$info = 2;
 		}
 
@@ -352,4 +389,50 @@ class Principal extends CI_Controller {
 		$resposta = json_encode($mensagem);
         echo $resposta;
     }
+
+    //Pesquisa dinâmica
+    function buscadinamica(){
+    	$palavra = $this->input->get('name_startsWith');
+    	$tipo = $this->input->get('tipo');
+    	
+    	//viagens amigos do usuario
+	    if($tipo == 1){
+			$amigos = $this->usuario_ml->get_friends();
+		
+			/*Captura os amigos do usuario*/
+			for ($i=0; $i < count($amigos['data']); $i++){
+				$friends [$i] = $amigos['data'][$i]['id'];
+			}
+
+			$busca = $this->viagem_ml->buscadinamica($palavra, $friends);
+
+	    }else /*viagens usuario*/ if($tipo == 2){
+	    	$busca = $this->viagem_ml->buscadinamica($palavra, $this->session->userdata('facebook_uid'));
+	    }
+
+		$montaviagem = new StdClass;
+			foreach ($busca as $key=>$value) {
+				$data = date("d/m/Y", strtotime($value->data));
+				$hora = date("H:i", strtotime($value->hora));
+
+				if($value->solicitante == 0){
+					$tipo = 'ofertou';
+				}else if($value->solicitante == 1){
+					$tipo = 'solicitou';
+				}
+				$montaviagem->$key->nome = $value->nome;
+				$montaviagem->$key->tipo = $tipo;
+				$montaviagem->$key->origem = $value->origem;
+				$montaviagem->$key->destino = $value->destino;
+				$montaviagem->$key->data = $data;
+				$montaviagem->$key->hora = $hora;
+				$montaviagem->$key->id_usuario = $value->id_usuario;
+				$montaviagem->$key->id_viagem = $value->id_viagem;
+				$montaviagem->$key->status = $value->status;
+			}
+
+    	$resposta = json_encode($montaviagem);
+    	echo $resposta;
+    }
+
 }

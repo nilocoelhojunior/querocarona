@@ -49,9 +49,9 @@ $active_group = 'default';
 $active_record = TRUE;
 
 $db['default']['hostname'] = 'localhost';
-$db['default']['username'] = 'quero816_nilo';
-$db['default']['password'] = 'meuamor01';
-$db['default']['database'] = 'quero816_quero-carona';
+$db['default']['username'] = 'root';
+$db['default']['password'] = '';
+$db['default']['database'] = 'querocarona';
 $db['default']['dbdriver'] = 'mysql';
 $db['default']['port']     = '';
 $db['default']['dbprefix'] = '';

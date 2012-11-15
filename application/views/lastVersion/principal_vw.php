@@ -17,8 +17,7 @@
         <script type="text/javascript" src="<?php echo base_url();?>/assets/js/jquery-ui-1.8.20.custom.js"></script>
         <script type="text/javascript" src="<?php echo base_url();?>/assets/js/bootstrap.js"></script>
         <script type="text/javascript" src="<?php echo base_url();?>/assets/js/script.js"></script>
-        <script src='https://connect.facebook.net/en_US/all.js'></script>
-    
+        
         <link rel="stylesheet" type="text/css" href="<?php echo base_url();?>/assets/css/bootstrap.css">
         <link rel="stylesheet" type="text/css" href="<?php echo base_url();?>/assets/css/jquery-ui-1.8.20.custom.css">
         <link rel="stylesheet" type="text/css" href="<?php echo base_url();?>/assets/css/styles.css">   
@@ -31,22 +30,13 @@
           </style>
         <![endif]-->
 
-        <script>(
-			function(d, s, id) {
+        <script>(function(d, s, id) {
               var js, fjs = d.getElementsByTagName(s)[0];
               if (d.getElementById(id)) return;
               js = d.createElement(s); js.id = id;
               js.src = "//connect.facebook.net/pt_BR/all.js#xfbml=1&appId=186499281485398";
               fjs.parentNode.insertBefore(js, fjs);
-            }(document, 'script', 'facebook-jssdk'));
-			
-			FB.init({appId: "234298743282904", status: true, cookie: true});
-
-			function postToFeed() {
-			FB.ui({ method: 'apprequests', 
-			message: 'Here is a new Requests dialog...'});
-			}
-		</script>
+            }(document, 'script', 'facebook-jssdk'));</script>
 
     </head>  
     
@@ -54,19 +44,15 @@
         <div class="canvas">
 
             <div id="fb-root"></div>
-			<p><a onclick='postToFeed(); return false;'>Post to Feed</a></p>
-			<p id='msg'></p>
+
             <div id="" class="querocarona">
                 <div id="social-like">
-                    <div class="fb-like" data-href="https://apps.facebook.com/querocarona/" 
-					data-send="true" 
-					data-width="450" 
-					data-show-faces="false" 
-					data-font="arial"></div>
-                </div>            
+                    <div class="fb-like" data-href="https://apps.facebook.com/querocarona/" data-send="true" data-width="450" data-show-faces="true" data-font="arial"></div>
+                </div>
             </div>
 
             <div id="border-form">
+                
                 <div id="form" class="layer2">  
                     
                     <div id="info" class="info_sucesso"><div id="info_conteudo_sucesso"></div></div>
@@ -76,7 +62,7 @@
                     <div id="loader" style="display: none; position: absolute; padding-left:17px; margin-top: 15px;">
                         <img src="<?php echo base_url();?>/assets/img/loader.gif" style="width: 20px;">
                     </div>
-
+                    
                     <form name="form" class="formulario" id="formulario" method="post" onsubmit="return false;">
                         <label class="laborigem" for="origem">De:
                             <input id="origem" name="origem" placeholder="Ex: ifpi, centro..." type="text" />

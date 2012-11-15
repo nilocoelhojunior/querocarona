@@ -68,7 +68,6 @@ class Usuario_ml extends CI_Model {
 	}
 	
 	function get_logout_url() {
-		
 		$query = $this->facebook->getLogoutUrl(array('next' => base_url()));
 		
 		if ($query) {
@@ -94,18 +93,6 @@ class Usuario_ml extends CI_Model {
 		}
 	}
 	
-	function get_friends(){
-        $query = $this->facebook->api('/me/friends');
-		
-		if ($query) {
-			$data['is_true'] = TRUE;
-			return $query;
-		} else {
-			$data['is_true'] = FALSE;
-			return $data;
-		}
-	}
-
     function set_user($user){
         $test = $this->db->select('id_usuario')->where_in('id_usuario', $user['id_usuario'])->get('tb_usuario')->result();
         if ($test == null){
@@ -136,7 +123,6 @@ class Usuario_ml extends CI_Model {
 			return $data;
 		}
 	}
-	
 	function set_app_id($app_id) {
 		$query = $this->facebook->setAppId($app_id);
 		
@@ -160,28 +146,6 @@ class Usuario_ml extends CI_Model {
 			return $data;
 		}
 	}
-
-	//envia notificacao para usarios do facebook
-	function set_notification($recipient_userid, $message, $id_viagem){
-
-		$url = 'principal/home/'.$id_viagem;
-		#$url = 'https://apps.facebook.com';
-		$data = array(
-				'href'=> $url,
-				'access_token'=> '234298743282904|0urKBKqK4ryZIRS-7nWx7NuGEkc',
-				'template'=> $message
-		);
-		$sendnotification = $this->facebook->api('/'.$recipient_userid.'/notifications', 'post', $data);
-            //$this->postTimeLine();
-		
-		if ($sendnotification) {
-			$data['is_true'] = TRUE;
-			return $data;
-		} else {
-			$data['is_true'] = FALSE;
-			return $data;
-		}
-	}
         
         //Funcao para postar no mural do autor da viagem
     function postToWall ($params){
@@ -196,9 +160,9 @@ class Usuario_ml extends CI_Model {
             $id = $params['id_usuario'];
 
             if ($params['solicitante'] == 1){
-            	$message = "Galera, estou em $origem querendo ir pra $destino, por volta das $horario h de $data, alguem ajuda ai com uma carona.";
+            	$message = "Galera, estou em $origem querendo ir pra $destino, por volta das $horario h de $data, alguem em ajuda ai com uma carona. vlw";
             }else{
-            	$message = "Galera, estou em $origem e indo pra $destino, por volta das $horario h de $data, se alguem estiver afim de uma carona.";
+            	$message = "Galera, estou em $origem e indo pra $destino, por volta das $horario h de $data, alguem tiver afim de ir comigo. vlw";
             }
 
             //variavel que vai receber o array dinâmico
@@ -210,18 +174,18 @@ class Usuario_ml extends CI_Model {
                 //link para o name acima
                 'link' => 'https://facebook.com/querocarona',
                 //Slogan
-                'caption' => "&Eacute; assim que eu vou.",
+                'caption' => "É assim que eu vou.",
                 //Espaço reservado para uma descricao da app
-                'description' => 'Se voc&ecirc; vai pra algum lugar e quer oferecer ou pedir carona, este &eacute; o lugar.',
+                'description' => 'Se você vai pra algum lugar e quer oferecer ou pedir carona, este é o lugar.',
                 //logotipo da app
-                'picture' => 'http://quero-carona.com/assets/img/logo.jpg',
+                'picture' => 'http://thonnycleuton.com/querocarona/assets/images/logo.png',
                 //aqui é onde será postada o link para a viagem que foi criada
                 'actions' => array ('name' => 'Deseja ir comigo? Clica aqui','link' => 'https://apps.facebook.com/querocarona'),
                 );
             //$message_tags = array('id' => $id,'name' => $userName,'offset' => 0,'type' => 'user','length' => strlen($userName));
-            $privacy = array('value' => 'CUSTOM','friends' => 'ALL_FRIENDS',);
+            $privacy = array('value' => 'CUSTOM','friends' => 'SELF',);
             $wall_post['privacy'] = json_encode($privacy);
-            //$wall_post['message_tags'] = json_encode($message_tags);
+            $wall_post['message_tags'] = json_encode($message_tags);
             //funcao que chama api para postagem no mural
             $query = $this->facebook->api('/me/feed/', 'post', $wall_post);
             //$this->postTimeLine();
@@ -234,7 +198,22 @@ class Usuario_ml extends CI_Model {
 			return $data;
 		}
     }
+
+    function set_notifications($facebook_uid, $access_token){
+    	//notifications?access_token=234298743282904|0urKBKqK4ryZIRS-7nWx7NuGEkc&href=localhost/codeigniter&template=testando
+    	$post_data = "access_token=".$facebook->getAccessToken()."&template=Tem novidades na sua carona&href=https://apps.facebook.com/querocarona";
+		
+		$curl = curl_init(); 		
+		curl_setopt($curl, CURLOPT_URL, "https://graph.facebook.com/".$user."/notifications/"); 
+		curl_setopt($curl, CURLOPT_POSTFIELDS, $post_data); 
+		curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1); 
+		$page = curl_exec($curl); 
+		curl_close($curl); 
+		
+    }
 	
+	//function is formatted for the following
+	//https://graph.facebook.com/ID/CONNECTION_TYPE?access_token=123456
 	function get_facebook_object($object, $facebook_uid, $access_token) {
 		$fb_connect = curl_init();  
 		curl_setopt($fb_connect, CURLOPT_URL, 'https://graph.facebook.com/'.$facebook_uid.'/'.$object.'?access_token='.$access_token);  
@@ -261,17 +240,17 @@ class Usuario_ml extends CI_Model {
 	
 	//ainda em testes, nenhuma feature utiliza esta fun�ao **Thonnycleuton
 	function postTimeLine(){
-        $token = $this->get_access_token();
-        $params = array(
-            'access_token' => $token['access_token'],
-            '{object}' => 'http://samples.ogp.me/393060727406704',
-        );
-        try{
-            $result = $this->facebook->api('/me/querocarona:ride', 'POST', $params);
-            echo $result;
+            $token = $this->get_access_token();
+            $params = array(
+                'access_token' => $token['access_token'],
+                '{object}' => 'http://samples.ogp.me/393060727406704',
+            );
+            try{
+                $result = $this->facebook->api('/me/querocarona:ride', 'POST', $params);
+                echo $result;
+            }
+            catch(FacebookApiException $e){
+                echo $e;
+            }
         }
-        catch(FacebookApiException $e){
-            echo $e;
-        }
-   }
 }
